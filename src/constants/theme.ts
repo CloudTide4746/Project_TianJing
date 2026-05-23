@@ -7,21 +7,24 @@ import '@/global.css';
 
 import { Platform } from 'react-native';
 
+import { FoundationColors } from '@/constants/collectible-theme';
+
+const productThemeColors = {
+  text: FoundationColors.text,
+  background: FoundationColors.background,
+  backgroundElement: FoundationColors.backgroundElement,
+  backgroundSelected: FoundationColors.backgroundSelected,
+  textSecondary: FoundationColors.textSecondary,
+  textMuted: FoundationColors.textMuted,
+  border: FoundationColors.border,
+  success: FoundationColors.success,
+  error: FoundationColors.error,
+  gold: FoundationColors.gold,
+} as const;
+
 export const Colors = {
-  light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
-  },
-  dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
-  },
+  light: productThemeColors,
+  dark: productThemeColors,
 } as const;
 
 export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
@@ -44,9 +47,9 @@ export const Fonts = Platform.select({
     mono: 'monospace',
   },
   web: {
-    sans: 'var(--font-display)',
+    sans: 'var(--font-sans)',
     serif: 'var(--font-serif)',
-    rounded: 'var(--font-rounded)',
+    rounded: 'var(--font-accent)',
     mono: 'var(--font-mono)',
   },
 });
@@ -61,5 +64,4 @@ export const Spacing = {
   six: 64,
 } as const;
 
-export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
 export const MaxContentWidth = 800;

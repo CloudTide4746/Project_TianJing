@@ -1,180 +1,138 @@
-import { Image } from 'expo-image';
-import { SymbolView } from 'expo-symbols';
-import { Platform, Pressable, ScrollView, StyleSheet } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useMemo, useState } from 'react';
+import { useRouter } from 'expo-router';
+import { StyleSheet, View } from 'react-native';
 
-import { ExternalLink } from '@/components/external-link';
+import { CollectionFilterBar } from '@/components/collection/collection-filter-bar';
+import { CollectibleListItem } from '@/components/collection/collectible-list-item';
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Collapsible } from '@/components/ui/collapsible';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
+import { EmptyState } from '@/components/ui/empty-state';
+import { GlowCard } from '@/components/ui/glow-card';
+import { PrimaryButton } from '@/components/ui/primary-button';
+import { ScreenShell } from '@/components/ui/screen-shell';
+import { SectionHeader } from '@/components/ui/section-header';
+import { collectibleStatusCounts, recentCollectibles } from '@/data/mock-collectibles';
+import { getCollectibleTheme } from '@/constants/collectible-theme';
+import { Spacing } from '@/constants/theme';
+import type { CollectibleFilterValue, CollectibleStatus } from '@/types/collectible';
 
-export default function TabTwoScreen() {
-  const safeAreaInsets = useSafeAreaInsets();
-  const insets = {
-    ...safeAreaInsets,
-    bottom: safeAreaInsets.bottom + BottomTabInset + Spacing.three,
+function matchesFilters(
+  kind: CollectibleFilterValue,
+  status: CollectibleStatus | 'all',
+  item: (typeof recentCollectibles)[number],
+) {
+  const kindMatched = kind === 'all' || item.kind === kind;
+  const statusMatched = status === 'all' || item.generationStatus === status;
+
+  return kindMatched && statusMatched;
+}
+
+export default function ExploreScreen() {
+  const router = useRouter();
+  const [kind, setKind] = useState<CollectibleFilterValue>('all');
+  const [status, setStatus] = useState<CollectibleStatus | 'all'>('all');
+
+  const items = useMemo(
+    () => recentCollectibles.filter((item) => matchesFilters(kind, status, item)),
+    [kind, status],
+  );
+
+  const selectedTone = kind === 'all' ? 'default' : kind;
+  const selectedTheme = kind === 'all' ? null : getCollectibleTheme(kind);
+  const handleOpenCreate = () => {
+    router.push('/create' as never);
   };
-  const theme = useTheme();
-
-  const contentPlatformStyle = Platform.select({
-    android: {
-      paddingTop: insets.top,
-      paddingLeft: insets.left,
-      paddingRight: insets.right,
-      paddingBottom: insets.bottom,
-    },
-    web: {
-      paddingTop: Spacing.six,
-      paddingBottom: Spacing.four,
-    },
-  });
 
   return (
-    <ScrollView
-      style={[styles.scrollView, { backgroundColor: theme.background }]}
-      contentInset={insets}
-      contentContainerStyle={[styles.contentContainer, contentPlatformStyle]}>
-      <ThemedView style={styles.container}>
-        <ThemedView style={styles.titleContainer}>
-          <ThemedText type="subtitle">Explore</ThemedText>
-          <ThemedText style={styles.centerText} themeColor="textSecondary">
-            This starter app includes example{'\n'}code to help you get started.
-          </ThemedText>
+    <ScreenShell
+      eyebrow="收藏页模板"
+      subtitle="支持按类型与生成状态筛选，列表项保留状态标签、地点信息和跳详情入口。"
+      title="我的收藏">
+      <CollectionFilterBar
+        kind={kind}
+        onKindChange={setKind}
+        onStatusChange={setStatus}
+        resultCount={items.length}
+        status={status}
+      />
 
-          <ExternalLink href="https://docs.expo.dev" asChild>
-            <Pressable style={({ pressed }) => pressed && styles.pressed}>
-              <ThemedView type="backgroundElement" style={styles.linkButton}>
-                <ThemedText type="link">Expo documentation</ThemedText>
-                <SymbolView
-                  tintColor={theme.text}
-                  name={{ ios: 'arrow.up.right.square', android: 'link', web: 'link' }}
-                  size={12}
-                />
-              </ThemedView>
-            </Pressable>
-          </ExternalLink>
-        </ThemedView>
-
-        <ThemedView style={styles.sectionsWrapper}>
-          <Collapsible title="File-based routing">
-            <ThemedText type="small">
-              This app has two screens: <ThemedText type="code">src/app/index.tsx</ThemedText> and{' '}
-              <ThemedText type="code">src/app/explore.tsx</ThemedText>
-            </ThemedText>
-            <ThemedText type="small">
-              The layout file in <ThemedText type="code">src/app/_layout.tsx</ThemedText> sets up
-              the tab navigator.
-            </ThemedText>
-            <ExternalLink href="https://docs.expo.dev/router/introduction">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
-
-          <Collapsible title="Android, iOS, and web support">
-            <ThemedView type="backgroundElement" style={styles.collapsibleContent}>
-              <ThemedText type="small">
-                You can open this project on Android, iOS, and the web. To open the web version,
-                press <ThemedText type="smallBold">w</ThemedText> in the terminal running this
-                project.
-              </ThemedText>
-              <Image
-                source={require('@/assets/images/tutorial-web.png')}
-                style={styles.imageTutorial}
+      {items.length > 0 ? (
+        <View style={styles.listSection}>
+          <SectionHeader
+            subtitle={
+              status === 'all'
+                ? '从最近生成到排队中的草稿，都在这里按时间倒序排布。'
+                : `当前筛选聚焦在${status === 'complete' ? '已完成作品' : '指定状态'}。`
+            }
+            title="作品列表"
+          />
+          <View style={styles.list}>
+            {items.map((item) => (
+              <CollectibleListItem
+                item={item}
+                key={item.id}
+                onPress={() => router.push(`/result/${item.id}` as never)}
               />
-            </ThemedView>
-          </Collapsible>
+            ))}
+          </View>
+        </View>
+      ) : (
+        <EmptyState
+          actionLabel={kind === 'all' && status === 'all' ? '开始创作' : '清空筛选'}
+          badge={kind === 'all' ? '没有匹配结果' : selectedTheme?.title}
+          description={
+            kind === 'all' && status === 'all'
+              ? '完成第一次生成后，作品会自动归档到收藏页。'
+              : '当前筛选没有命中任何作品。你可以清空条件，或直接进入创作流开启新的显影。'
+          }
+          onAction={() => {
+            if (kind === 'all' && status === 'all') {
+              handleOpenCreate();
+              return;
+            }
 
-          <Collapsible title="Images">
-            <ThemedText type="small">
-              For static images, you can use the <ThemedText type="code">@2x</ThemedText> and{' '}
-              <ThemedText type="code">@3x</ThemedText> suffixes to provide files for different
-              screen densities.
-            </ThemedText>
-            <Image source={require('@/assets/images/react-logo.png')} style={styles.imageReact} />
-            <ExternalLink href="https://reactnative.dev/docs/images">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
+            setKind('all');
+            setStatus('all');
+          }}
+          secondaryActionLabel="返回首页"
+          onSecondaryAction={() => router.push('/')}
+          title={kind === 'all' && status === 'all' ? '还没有收藏作品' : '暂时没有匹配到作品'}
+          tone={selectedTone}
+        />
+      )}
 
-          <Collapsible title="Light and dark mode components">
-            <ThemedText type="small">
-              This template has light and dark mode support. The{' '}
-              <ThemedText type="code">useColorScheme()</ThemedText> hook lets you inspect what the
-              user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-            </ThemedText>
-            <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
-
-          <Collapsible title="Animations">
-            <ThemedText type="small">
-              This template includes an example of an animated component. The{' '}
-              <ThemedText type="code">src/components/ui/collapsible.tsx</ThemedText> component uses
-              the powerful <ThemedText type="code">react-native-reanimated</ThemedText> library to
-              animate opening this hint.
-            </ThemedText>
-          </Collapsible>
-        </ThemedView>
-        {Platform.OS === 'web' && <WebBadge />}
-      </ThemedView>
-    </ScrollView>
+      <GlowCard tone={selectedTone}>
+        <SectionHeader
+          subtitle="保留一个稳定的页尾入口，方便从收藏直接回到创作或查看全部状态分布。"
+          title="继续创作"
+        />
+        <View style={styles.summary}>
+          <ThemedText themeColor="textSecondary" style={styles.summaryText}>
+            已完成 {collectibleStatusCounts.complete} 件，排队中 {collectibleStatusCounts.queued}{' '}
+            件，生成中 {collectibleStatusCounts.generating} 件。
+          </ThemedText>
+        </View>
+        <PrimaryButton
+          label="开始新的创作"
+          onPress={handleOpenCreate}
+          tone={selectedTone}
+        />
+      </GlowCard>
+    </ScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-  },
-  contentContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  container: {
-    maxWidth: MaxContentWidth,
-    flexGrow: 1,
-  },
-  titleContainer: {
+  listSection: {
     gap: Spacing.three,
-    alignItems: 'center',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.six,
   },
-  centerText: {
-    textAlign: 'center',
+  list: {
+    gap: Spacing.three,
   },
-  pressed: {
-    opacity: 0.7,
+  summary: {
+    gap: Spacing.two,
   },
-  linkButton: {
-    flexDirection: 'row',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.two,
-    borderRadius: Spacing.five,
-    justifyContent: 'center',
-    gap: Spacing.one,
-    alignItems: 'center',
-  },
-  sectionsWrapper: {
-    gap: Spacing.five,
-    paddingHorizontal: Spacing.four,
-    paddingTop: Spacing.three,
-  },
-  collapsibleContent: {
-    alignItems: 'center',
-  },
-  imageTutorial: {
-    width: '100%',
-    aspectRatio: 296 / 171,
-    borderRadius: Spacing.three,
-    marginTop: Spacing.two,
-  },
-  imageReact: {
-    width: 100,
-    height: 100,
-    alignSelf: 'center',
+  summaryText: {
+    fontSize: 14,
+    lineHeight: 20,
   },
 });
