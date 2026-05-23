@@ -18,6 +18,11 @@ client = OpenAI(
 # (文件名, 提示词, 尺寸)
 IMAGE_CONFIGS = [
     (
+        "poster-spacetime-imprint.png",
+        "A tall vertical magazine-editorial product poster (9:16) for Chinese AI photo app '刻迹'. Warm aged-paper (#f6f2e9), gold accents (#b08a59), museum-spotlight feel. DO NOT arrange elements in numbered horizontal rows. Instead use an asymmetric editorial layout — elements staggered left-right, some overlapping, like a premium art magazine spread. Key elements to place organically across the canvas: [HEADER] Top area, offset slightly right: large Chinese calligraphy '刻迹' in burnished gold, beneath it small subtitle '拍照锚定 · 风格转绘 · 刻成珍藏'. [CAPTURE SCENE] Mid-upper area, placed left: a smartphone showing photo capture UI, surrounded by floating small labels — GPS pin '坐标', clock '时间', cloud '天气' — to show auto-anchor. A tiny note nearby: '也可自写内容'. [BEFORE-AFTER] Center-right, slightly overlapping: left half a plain lake photo, golden arrow, right half the same scene in ink-wash painting style. Below it staggered 6 mini style swatches labeled 水墨/敦煌/油画/木刻/水彩/赛博. [COLLECTIBLE CARD] Lower-mid area, left side, presented at a slight angle like a card on a table: a beautiful card with AI-stylized image, location name, a golden verse line, coordinate stamp. [FLOW DIAGRAM] Bottom-right area, small and subtle: 4 connected circles with icons — '拍摄'→'选风格'→'AI铸造'→'分享'. [COLLECTION] Bottom-left, three mini cards fanned like a hand. No QR codes, no human faces, no linear section numbering. Layout should feel like an editorial spread — airy, staggered, sophisticated.",
+        "1024x1792",
+    ),
+    (
         "create-banner.png",
         "A horizontal digital illustration, 1372x240 pixels. The style fuses archaeological manuscript with classical ink wash painting. Across the frame: a translucent ancient stone stele fragment on the left, drifting gold dust particles through the center, a floating ethereal brush on the right. Warm cream background (#f6f2e9). Muted gold (#b08a59) and faded ink (#5f564e) fine-line accents. The mood is quiet digital artifact restoration workbench - focused, slightly mysterious. No text, no UI elements. Soft vignette fade at the edges. Very low contrast, atmospheric.",
         "1792x1024",

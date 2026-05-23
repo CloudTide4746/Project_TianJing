@@ -21,7 +21,7 @@ def get_share_qrcode(
     """Generate a QR code PNG for sharing a collectible."""
     item = db.get_collectible_by_id(collectible_id)
     if not item:
-        raise HTTPException(status_code=404, detail="时空印记不存在")
+        raise HTTPException(status_code=404, detail="刻迹不存在")
 
     # Encode a share URL — use a universal link scheme
     share_url = f"https://spacetime.app/share/{collectible_id}"

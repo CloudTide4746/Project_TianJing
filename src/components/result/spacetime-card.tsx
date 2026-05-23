@@ -56,11 +56,11 @@ export function SpacetimeCard({ imageUrl, imageAlt, anchor, locationStyle, colle
         <ThemedText style={[styles.locationDash, { color: theme.accent }]}>—</ThemedText>
       </View>
 
-      {/* 时空印记区 */}
+      {/* 刻迹区 */}
       <View style={[styles.anchorPanel, { borderColor: theme.accent + '40' }]}>
         <View style={[styles.anchorPanelHeader, { borderBottomColor: theme.accent + '30' }]}>
           <ThemedText style={[styles.anchorPanelTitle, { color: theme.primary }]}>
-            时空印记
+            刻迹
           </ThemedText>
         </View>
 

@@ -2,7 +2,7 @@
 
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
-import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 
 import { CollectionFilterBar } from '@/components/collection/collection-filter-bar';
 import { CollectibleListItem } from '@/components/collection/collectible-list-item';
@@ -15,6 +15,7 @@ import { SectionHeader } from '@/components/ui/section-header';
 import { StatusPill } from '@/components/ui/status-pill';
 import { Spacing } from '@/constants/theme';
 import {
+  deleteCollectible,
   getTimeline,
   listCollectibles,
   type CollectibleListItem as ApiCollectibleListItem,
@@ -97,6 +98,42 @@ export default function ExploreScreen() {
     fetchData(true);
   };
 
+  const handleDelete = (item: ApiCollectibleListItem) => {
+    Alert.alert(
+      '删除印记',
+      `确定要删除「${item.title || item.siteName || '未命名'}」吗？\n删除后无法恢复。`,
+      [
+        { text: '取消', style: 'cancel' },
+        {
+          text: '删除',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await deleteCollectible(item.id);
+              // Remove from local state immediately
+              setItems((prev) => prev.filter((i) => i.id !== item.id));
+              setTimelineGroups((prev) =>
+                prev
+                  .map((g) => ({ ...g, items: g.items.filter((i) => i.id !== item.id) }))
+                  .filter((g) => g.items.length > 0),
+              );
+              // Refresh cache
+              const updated = items.filter((i) => i.id !== item.id);
+              cacheCollectibles(updated);
+              cacheTimeline(
+                timelineGroups
+                  .map((g) => ({ ...g, items: g.items.filter((i) => i.id !== item.id) }))
+                  .filter((g) => g.items.length > 0),
+              );
+            } catch (err: any) {
+              Alert.alert('删除失败', err.message || '请稍后重试');
+            }
+          },
+        },
+      ],
+    );
+  };
+
   const filteredItems = useMemo(() => {
     let result = items;
     if (kind === 'favorites') {
@@ -121,8 +158,8 @@ export default function ExploreScreen() {
 
   return (
     <ScreenShell
-      eyebrow="时空印记库"
-      subtitle={viewMode === 'timeline' ? '按时间轴回溯你的在场证明' : '列表浏览所有时空印记'}
+      eyebrow="刻迹库"
+      subtitle={viewMode === 'timeline' ? '按时间轴回溯你的在场证明' : '列表浏览所有刻迹'}
       title="在场证明">
       {/* View mode toggle */}
       <View style={styles.viewToggle}>
@@ -165,8 +202,8 @@ export default function ExploreScreen() {
       {loading && items.length === 0 ? (
         <EmptyState
           badge="加载中"
-          description="正在连接时空印记服务器..."
-          title="读取时空印记库..."
+          description="正在连接刻迹服务器..."
+          title="读取刻迹库..."
           tone="ruin"
         />
       ) : error && items.length === 0 ? (
@@ -175,7 +212,7 @@ export default function ExploreScreen() {
           badge="连接失败"
           description={error}
           onAction={() => fetchData()}
-          title="无法加载时空印记"
+          title="无法加载刻迹"
           tone="default"
         />
       ) : filteredItems.length === 0 ? (
@@ -188,7 +225,7 @@ export default function ExploreScreen() {
               : '完成第一次从时间里挖掘后，印记会自动归档到这里。'
           }
           onAction={() => router.navigate('/create' as never)}
-          title={kind === 'favorites' ? '还没有收藏印记' : '还没有时空印记'}
+          title={kind === 'favorites' ? '还没有收藏印记' : '还没有刻迹'}
           tone="ruin"
         />
       ) : viewMode === 'timeline' ? (
@@ -212,6 +249,7 @@ export default function ExploreScreen() {
                   <CollectibleListItem
                     key={item.id}
                     item={item}
+                    onLongPress={() => handleDelete(item)}
                     onPress={() => router.push(`/result/${item.id}` as never)}
                   />
                 ))}
@@ -230,6 +268,7 @@ export default function ExploreScreen() {
             <CollectibleListItem
               key={item.id}
               item={item}
+              onLongPress={() => handleDelete(item)}
               onPress={() => router.push(`/result/${item.id}` as never)}
             />
           ))}
@@ -246,7 +285,7 @@ export default function ExploreScreen() {
         </View>
         <View style={styles.summary}>
           <ThemedText themeColor="textMuted" style={styles.summaryText}>
-            共 {filteredItems.length} 件时空印记。
+            共 {filteredItems.length} 件刻迹。
             {items.length === 0
               ? ' 完成第一次从时间里挖掘后，这里会逐渐累积你的在场证明。'
               : ' 每一个坐标都不可重复，每一个时刻都只属于你。'}

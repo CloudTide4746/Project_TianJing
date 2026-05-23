@@ -57,6 +57,7 @@ export type DynastyId = 'qin' | 'han' | 'tang' | 'song' | 'ming' | 'qing';
 export interface GenerateOptions {
   artStyle: ArtStyleId | null;
   colorTone: ColorToneId | null;
+  customColorHex: string | null;
   timeTexture: TimeTextureId | null;
   customKeywords: string;
   mood: MoodId | null;
@@ -72,6 +73,7 @@ export interface GenerateOptions {
 export const DEFAULT_GENERATE_OPTIONS: GenerateOptions = {
   artStyle: null,
   colorTone: null,
+  customColorHex: null,
   timeTexture: null,
   customKeywords: '',
   mood: null,

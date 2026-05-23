@@ -208,7 +208,7 @@ function GeneratingFlow({
             canCancel: p.canCancel,
           }))}
           subtitle={currentPhase.detail}
-          title="时空印记铸造中"
+          title="刻迹铸造中"
           tone="ruin"
         />
       ) : (
@@ -236,7 +236,7 @@ function GeneratingFlow({
       ) : isComplete ? (
         <EmptyState
           badge="铸造完成"
-          description="时空印记已存入收藏库，正在前往结果页。"
+          description="刻迹已存入收藏库，正在前往结果页。"
           title="印记铸造完成"
           tone="ruin"
         />

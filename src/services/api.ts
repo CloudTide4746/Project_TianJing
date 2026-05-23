@@ -1,5 +1,5 @@
 /**
- * API client for 时空印记 backend.
+ * API client for 刻迹 backend.
  *
  * Change MANUAL_BASE_URL to your backend server IP when testing on a physical device.
  * Find your computer's LAN IP (e.g. 192.168.1.100) and set it below.
@@ -288,6 +288,7 @@ export async function uploadCollectible(
   if (options) {
     if (options.artStyle) formData.append('artStyle', options.artStyle);
     if (options.colorTone) formData.append('colorTone', options.colorTone);
+    if (options.customColorHex) formData.append('customColorHex', options.customColorHex);
     if (options.timeTexture) formData.append('timeTexture', options.timeTexture);
     if (options.customKeywords) formData.append('customKeywords', options.customKeywords);
     if (options.mood) formData.append('mood', options.mood);

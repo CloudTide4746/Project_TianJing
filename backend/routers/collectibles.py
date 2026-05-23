@@ -57,10 +57,10 @@ def _to_collectible_out(data: dict) -> CollectibleOut:
             save_count=data.get("save_count", 0),
         ),
         share=CollectibleShareContentOut(
-            title=f"我在{data.get('location_name', '')}留下了第{data.get('mint_number', 0)}个时空印记",
+            title=f"我在{data.get('location_name', '')}留下了第{data.get('mint_number', 0)}个刻迹",
             caption=data.get("golden_line", ""),
             call_to_action=data.get("call_to_action") or f"打开时空卡，见证你在{data.get('location_name', '')}的坐标被存档。",
-            hashtags=[f"#时空印记", f"#{data.get('site_name', '')}"],
+            hashtags=[f"#刻迹", f"#{data.get('site_name', '')}"],
         ),
         anchor=SpacetimeAnchorOut(
             latitude=data.get("latitude", 0),
@@ -187,7 +187,7 @@ def get_cities():
 def get_collectible(collectible_id: str):
     item = db.get_collectible_by_id(collectible_id)
     if not item:
-        raise HTTPException(status_code=404, detail="时空印记不存在")
+        raise HTTPException(status_code=404, detail="刻迹不存在")
     # Increment view count without bumping updated_at
     db.increment_view_count(collectible_id)
     item["view_count"] = item.get("view_count", 0) + 1
@@ -198,12 +198,12 @@ def get_collectible(collectible_id: str):
 def toggle_favorite(collectible_id: str):
     result = db.toggle_favorite(collectible_id)
     if result is None:
-        raise HTTPException(status_code=404, detail="时空印记不存在")
+        raise HTTPException(status_code=404, detail="刻迹不存在")
     return {"ok": True, "is_favorite": result}
 
 
 @router.delete("/{collectible_id}")
 def delete_collectible(collectible_id: str):
     if not db.delete_collectible(collectible_id):
-        raise HTTPException(status_code=404, detail="时空印记不存在")
+        raise HTTPException(status_code=404, detail="刻迹不存在")
     return {"ok": True}

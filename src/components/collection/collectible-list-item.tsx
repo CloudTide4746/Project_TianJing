@@ -25,6 +25,7 @@ type ListItemData = {
 type CollectibleListItemProps = {
   item: ListItemData;
   onPress: () => void;
+  onLongPress?: () => void;
 };
 
 function formatDateLabel(value?: string) {
@@ -38,10 +39,11 @@ function getDisplayTitle(item: ListItemData): string {
   return item.title || item.siteName || '';
 }
 
-export function CollectibleListItem({ item, onPress }: CollectibleListItemProps) {
+export function CollectibleListItem({ item, onPress, onLongPress }: CollectibleListItemProps) {
   return (
     <GlowCard
       interactive
+      onLongPress={onLongPress}
       onPress={onPress}
       padding="sm"
       tone={item.kind}>

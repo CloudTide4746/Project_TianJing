@@ -69,14 +69,14 @@ export default function ResultScreen() {
   if (loading) {
     return (
       <ScreenShell
-        eyebrow="时空印记"
+        eyebrow="刻迹"
         subtitle="正在从时空数据库中提取档案..."
         title="加载中"
         tone="ruin">
         <EmptyState
           badge="加载中"
-          description="正在连接时空印记服务器获取数据。"
-          title="读取时空印记..."
+          description="正在连接刻迹服务器获取数据。"
+          title="读取刻迹..."
           tone="ruin"
         />
       </ScreenShell>
@@ -92,7 +92,7 @@ export default function ResultScreen() {
         <EmptyState
           actionLabel="返回收藏"
           badge="无效链接"
-          description="这件时空印记可能尚未铸造完成，或链接已失效。"
+          description="这件刻迹可能尚未铸造完成，或链接已失效。"
           onAction={() => router.replace('/explore' as never)}
           onSecondaryAction={() => router.replace('/create' as never)}
           secondaryActionLabel="开始创作"
@@ -126,7 +126,7 @@ export default function ResultScreen() {
 
   return (
     <ScreenShell
-      eyebrow="时空印记"
+      eyebrow="刻迹"
       footer={footer}
       subtitle="你的坐标已被正式存档。沉默的连接比社交网络有价值。"
       title={item.title || item.anchor.locationName}

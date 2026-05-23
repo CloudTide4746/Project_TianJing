@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import { FoundationColors } from '@/constants/collectible-theme';
 import { Fonts, Spacing } from '@/constants/theme';
@@ -20,6 +20,7 @@ import { GlowCard } from '../ui/glow-card';
 import { AdvancedOptionsPanel } from './advanced-options-panel';
 import { ChipSelector } from './chip-selector';
 import { CollapsibleSection } from './collapsible-section';
+import { ColorPalettePicker } from './color-palette-picker';
 import { StylePicker } from './style-picker';
 
 type CustomizationPanelProps = {
@@ -34,6 +35,7 @@ export function CustomizationPanel({
   disabled = false,
 }: CustomizationPanelProps) {
   const [advancedExpanded, setAdvancedExpanded] = useState(false);
+  const [paletteVisible, setPaletteVisible] = useState(false);
 
   return (
     <GlowCard padding="sm" tone="default">
@@ -64,11 +66,35 @@ export function CustomizationPanel({
           disabled={disabled}
           label="色调氛围"
           onChange={(id: ColorToneId) =>
-            onChange({ ...value, colorTone: id })
+            onChange({ ...value, colorTone: id, customColorHex: null })
           }
           options={COLOR_TONE_OPTIONS}
           value={value.colorTone}
         />
+        <View style={styles.customColorRow}>
+          <Pressable
+            disabled={disabled}
+            onPress={() => setPaletteVisible(true)}
+            style={[
+              styles.customColorChip,
+              value.customColorHex
+                ? { borderColor: value.customColorHex, backgroundColor: `${value.customColorHex}18` }
+                : { borderColor: FoundationColors.border, backgroundColor: FoundationColors.backgroundBright },
+            ]}
+          >
+            {value.customColorHex ? (
+              <View style={[styles.customSwatch, { backgroundColor: value.customColorHex }]} />
+            ) : null}
+            <ThemedText
+              style={[
+                styles.customColorLabel,
+                value.customColorHex ? { color: value.customColorHex, fontWeight: '700' } : null,
+              ]}
+            >
+              {value.customColorHex ? value.customColorHex : '🎨 自定义颜色'}
+            </ThemedText>
+          </Pressable>
+        </View>
       </View>
 
       <View style={styles.section}>
@@ -118,6 +144,15 @@ export function CustomizationPanel({
           value={value}
         />
       </CollapsibleSection>
+
+      <ColorPalettePicker
+        visible={paletteVisible}
+        onClose={() => setPaletteVisible(false)}
+        onSelect={(hex: string) =>
+          onChange({ ...value, customColorHex: hex || null, colorTone: hex ? null : value.colorTone })
+        }
+        selectedColor={value.customColorHex}
+      />
     </GlowCard>
   );
 }
@@ -167,5 +202,30 @@ const styles = StyleSheet.create({
   hint: {
     fontSize: 11,
     lineHeight: 15,
+  },
+  customColorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  customColorChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 7,
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+    borderRadius: 999,
+    borderWidth: 1,
+    minHeight: 38,
+  },
+  customSwatch: {
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+  },
+  customColorLabel: {
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: 600,
+    color: FoundationColors.text,
   },
 });

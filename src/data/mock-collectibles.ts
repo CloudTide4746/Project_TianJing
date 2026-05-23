@@ -39,7 +39,7 @@ export const collectibleKindOptions = collectibleThemeEntries.map((theme) => ({
   accent: string;
 }[];
 
-// ── 时空印记 mock 数据 ──────────────────────────────────────────
+// ── 刻迹 mock 数据 ──────────────────────────────────────────
 
 export const mockCollectibles: CollectibleItem[] = [
   {
@@ -49,7 +49,7 @@ export const mockCollectibles: CollectibleItem[] = [
     locationStyle: 'terracotta',
     title: '秦兵马俑一号坑',
     subtitle: '站在2200年前的军阵前',
-    shortDescription: '陶土质感、秦篆字体、铜锈色调的时空印记卡',
+    shortDescription: '陶土质感、秦篆字体、铜锈色调的刻迹卡',
     siteName: '秦兵马俑一号坑',
     province: '陕西',
     district: '西安·临潼区',
@@ -69,22 +69,22 @@ export const mockCollectibles: CollectibleItem[] = [
         'vertical poster of terracotta warriors, clay and bronze palette, Qin seal script, elegant museum poster design, premium cultural collectible',
         'portrait_16_9',
       ),
-      alt: '秦兵马俑一号坑陶土风格时空印记',
+      alt: '秦兵马俑一号坑陶土风格刻迹',
     },
     story: '你站在这里的时候，这些陶俑已经站了2200年。',
     tags: ['兵马俑', '秦代', '陶俑'],
     materialKeywords: ['陶土', '铜锈', '夯土'],
-    collectorNote: '首张时空印记卡，陶土质感与秦篆字体搭配',
+    collectorNote: '首张刻迹卡，陶土质感与秦篆字体搭配',
     isFavorite: true,
     isFeatured: true,
     generationStatus: 'complete',
     relatedIds: ['spacetime-002', 'spacetime-003'],
     metrics: { viewCount: 1284, shareCount: 168, saveCount: 402 },
     share: {
-      title: '我在兵马俑一号坑留下了第37个时空印记',
+      title: '我在兵马俑一号坑留下了第37个刻迹',
       caption: '你站在这里的时候，这些陶俑已经站了2200年。',
       callToAction: '打开时空卡，见证你的坐标被存档。',
-      hashtags: ['#时空印记', '#兵马俑', '#秦俑'],
+      hashtags: ['#刻迹', '#兵马俑', '#秦俑'],
     },
     anchor: {
       latitude: 34.3852,
@@ -109,7 +109,7 @@ export const mockCollectibles: CollectibleItem[] = [
     locationStyle: 'ink',
     title: '西湖断桥',
     subtitle: '每一滴雨都曾被一位诗人看见',
-    shortDescription: '水墨渲染、留白构图、青绿色系的时空印记卡',
+    shortDescription: '水墨渲染、留白构图、青绿色系的刻迹卡',
     siteName: '西湖断桥',
     province: '浙江',
     district: '杭州·西湖区',
@@ -129,7 +129,7 @@ export const mockCollectibles: CollectibleItem[] = [
         'vertical ink wash poster of West Lake Broken Bridge, celadon green palette, misty atmosphere, poetic Chinese aesthetic, premium share poster',
         'portrait_16_9',
       ),
-      alt: '西湖断桥水墨风格时空印记',
+      alt: '西湖断桥水墨风格刻迹',
     },
     story: '每一滴落在湖面的雨，都曾被一位诗人看见。而你今天看见的这一滴，也有你的名字。',
     tags: ['西湖', '水墨', '断桥'],
@@ -141,10 +141,10 @@ export const mockCollectibles: CollectibleItem[] = [
     relatedIds: ['spacetime-001', 'spacetime-003'],
     metrics: { viewCount: 2156, shareCount: 432, saveCount: 891 },
     share: {
-      title: '我在西湖断桥留下了第312个时空印记',
+      title: '我在西湖断桥留下了第312个刻迹',
       caption: '每一滴落在湖面的雨，都曾被一位诗人看见。',
       callToAction: '打开时空卡，见证你的坐标被存档。',
-      hashtags: ['#时空印记', '#西湖', '#水墨'],
+      hashtags: ['#刻迹', '#西湖', '#水墨'],
     },
     anchor: {
       latitude: 30.2592,
@@ -169,7 +169,7 @@ export const mockCollectibles: CollectibleItem[] = [
     locationStyle: 'cyber',
     title: '上海陆家嘴',
     subtitle: '城市每天都在生长，快门让它停了一下',
-    shortDescription: '赛博霓虹、玻璃折射的时空印记卡',
+    shortDescription: '赛博霓虹、玻璃折射的刻迹卡',
     siteName: '上海陆家嘴金融中心',
     province: '上海',
     district: '浦东新区',
@@ -189,7 +189,7 @@ export const mockCollectibles: CollectibleItem[] = [
         'vertical cyberpunk poster of Shanghai Lujiazui, neon purple and blue, glass tower refractions, futuristic urban premium share poster',
         'portrait_16_9',
       ),
-      alt: '上海陆家嘴赛博风格时空印记',
+      alt: '上海陆家嘴赛博风格刻迹',
     },
     story: '城市每天都在生长，钢筋和玻璃在夜色里呼吸。你摁下快门的那一刻，它刚好停了一下——这一下，就是你的坐标。',
     tags: ['陆家嘴', '赛博', '都市'],
@@ -201,10 +201,10 @@ export const mockCollectibles: CollectibleItem[] = [
     relatedIds: ['spacetime-001', 'spacetime-002'],
     metrics: { viewCount: 987, shareCount: 156, saveCount: 334 },
     share: {
-      title: '我在上海陆家嘴留下了第89个时空印记',
+      title: '我在上海陆家嘴留下了第89个刻迹',
       caption: '城市每天都在生长，你摁下快门的那一刻它刚好停了一下。',
       callToAction: '打开时空卡，见证你的坐标被存档。',
-      hashtags: ['#时空印记', '#陆家嘴', '#赛博'],
+      hashtags: ['#刻迹', '#陆家嘴', '#赛博'],
     },
     anchor: {
       latitude: 31.2397,
@@ -229,7 +229,7 @@ export const mockCollectibles: CollectibleItem[] = [
     locationStyle: 'mural',
     title: '敦煌莫高窟',
     subtitle: '飞天的线条穿过千年落在你眼前',
-    shortDescription: '壁画肌理、飞天线条、矿物颜料色的时空印记卡（铸造中）',
+    shortDescription: '壁画肌理、飞天线条、矿物颜料色的刻迹卡（铸造中）',
     siteName: '敦煌莫高窟',
     province: '甘肃',
     district: '敦煌市',
@@ -249,7 +249,7 @@ export const mockCollectibles: CollectibleItem[] = [
         'vertical poster of Dunhuang Mogao mural, mineral pigment ochre and blue, flying apsaras lines, silk road aesthetic, premium share poster',
         'portrait_16_9',
       ),
-      alt: '敦煌莫高窟壁画风格时空印记（铸造中）',
+      alt: '敦煌莫高窟壁画风格刻迹（铸造中）',
     },
     story: '飞天的线条穿过千年落在你眼前。矿物颜料还没褪色，风沙还没停。',
     tags: ['敦煌', '壁画', '飞天'],
@@ -261,10 +261,10 @@ export const mockCollectibles: CollectibleItem[] = [
     relatedIds: ['spacetime-001', 'spacetime-003'],
     metrics: { viewCount: 146, shareCount: 12, saveCount: 44 },
     share: {
-      title: '敦煌莫高窟的时空印记正在铸造中',
+      title: '敦煌莫高窟的刻迹正在铸造中',
       caption: '飞天的线条正在生成，稍后即可查看。',
       callToAction: '等待铸造完成后再生成海报。',
-      hashtags: ['#铸造中', '#敦煌', '#时空印记'],
+      hashtags: ['#铸造中', '#敦煌', '#刻迹'],
     },
     anchor: {
       latitude: 40.0415,

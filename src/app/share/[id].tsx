@@ -99,10 +99,10 @@ export default function ShareScreen() {
 
   if (loading) {
     return (
-      <ScreenShell eyebrow="分享" subtitle="正在加载印记数据..." title="分享时空印记">
+      <ScreenShell eyebrow="分享" subtitle="正在加载印记数据..." title="分享刻迹">
         <EmptyState
           badge="加载中"
-          description="正在连接时空印记服务器..."
+          description="正在连接刻迹服务器..."
           title="加载中"
           tone="default"
         />
@@ -112,11 +112,11 @@ export default function ShareScreen() {
 
   if (error || !item) {
     return (
-      <ScreenShell eyebrow="分享" subtitle="当前链接没有找到可分享的时空印记。" title="印记不存在">
+      <ScreenShell eyebrow="分享" subtitle="当前链接没有找到可分享的刻迹。" title="印记不存在">
         <EmptyState
           actionLabel="返回收藏"
           badge="无效链接"
-          description="这件时空印记可能还未铸造完成，或链接已失效。"
+          description="这件刻迹可能还未铸造完成，或链接已失效。"
           onAction={() => router.replace('/explore' as never)}
           onSecondaryAction={() => router.replace('/create' as never)}
           secondaryActionLabel="开始创作"
@@ -155,7 +155,7 @@ export default function ShareScreen() {
       eyebrow="分享"
       footer={footer}
       subtitle="沉默的连接比社交网络有价值。你不认识他们，但你们都站在这片土地上。"
-      title="分享时空印记"
+      title="分享刻迹"
       tone={item.kind}
     >
       <SharePosterPreview

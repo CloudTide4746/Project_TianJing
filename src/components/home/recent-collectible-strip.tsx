@@ -60,7 +60,7 @@ export function RecentCollectibleStrip({
       <SectionHeader
         actionLabel={onPressMore ? '查看全部' : undefined}
         onAction={onPressMore}
-        subtitle="最近铸造的时空印记，按时间顺序展开。"
+        subtitle="最近铸造的刻迹，按时间顺序展开。"
         title="近期印记"
         tone={tone}
       />
@@ -68,13 +68,13 @@ export function RecentCollectibleStrip({
       {loading ? (
         <View style={styles.emptyWrap}>
           <ThemedText style={styles.emptyText} themeColor="textMuted">
-            正在加载时空印记...
+            正在加载刻迹...
           </ThemedText>
         </View>
       ) : error ? (
         <View style={styles.emptyWrap}>
           <ThemedText style={styles.emptyText} themeColor="textMuted">
-            无法连接时空印记服务器
+            无法连接刻迹服务器
           </ThemedText>
         </View>
       ) : hasItems ? (

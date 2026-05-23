@@ -1,4 +1,4 @@
-"""时空印记 — FastAPI Backend.
+"""刻迹 — FastAPI Backend.
 
 Run: uvicorn main:app --reload --host 0.0.0.0 --port 8000
 """
@@ -12,14 +12,20 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from starlette.formparsers import MultiPartParser
+from starlette.requests import Request
 
 # Increase multipart part size limit: 1MB → 10MB (for base64 photos)
-MultiPartParser.max_part_size = 10 * 1024 * 1024  # 10MB
+# Starlette 0.50+ passes max_part_size explicitly through the call chain, so
+# we must patch all three defaults: Request.form → Request._get_form → MultiPartParser
+_10MB = 10 * 1024 * 1024
+MultiPartParser.__init__.__kwdefaults__["max_part_size"] = _10MB
+Request.form.__kwdefaults__["max_part_size"] = _10MB
+Request._get_form.__kwdefaults__["max_part_size"] = _10MB
 
 from database import init_db
 from routers import collectibles, location, generate, qrcode
 
-app = FastAPI(title="时空印记 API", version="1.0.0")
+app = FastAPI(title="刻迹 API", version="1.0.0")
 
 # CORS — allow Expo dev clients
 app.add_middleware(

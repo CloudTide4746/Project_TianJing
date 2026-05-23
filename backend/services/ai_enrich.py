@@ -1,4 +1,4 @@
-"""AI enrichment — 调用 DeepSeek-V3.2-Fast 生成时空印记的标题与艺术信息."""
+"""AI enrichment — 调用 DeepSeek-V3.2-Fast 生成刻迹的标题与艺术信息."""
 
 from __future__ import annotations
 
@@ -10,9 +10,9 @@ import httpx
 
 DMXAPI_URL = "https://www.dmxapi.cn/v1/chat/completions"
 DMXAPI_KEY = "sk-4u2zIMAMnZfH1h7f8YlbNlyAgCCt9z6Qw4y3cP0qL3fVHLpL"
-DMXAPI_MODEL = "DeepSeek-V3.2-Fast"
+DMXAPI_MODEL = "deepseek-v4-flash"
 
-SYSTEM_PROMPT_BASE = """你是一个"时空印记"铸造师。用户上传一张照片，系统会自动获取拍摄地点的GPS坐标、天气、空气质量、地点名称、地点风格等信息。
+SYSTEM_PROMPT_BASE = """你是一个"刻迹"铸造师。用户上传一张照片，系统会自动获取拍摄地点的GPS坐标、天气、空气质量、地点名称、地点风格等信息。
 
 你的任务：基于这些时空数据，为这张照片生成富有诗意和艺术感的元数据。
 
@@ -92,14 +92,14 @@ async def enrich_spacetime_imprint(
             '  "poem_text": ""'
         )
         call_to_action_instruction = (
-            '"call_to_action": "分享行动号召文案（12-20字），邀请他人打开时空印记，融入地点特色或诗意，必须每次不同、不可雷同"'
+            '"call_to_action": "分享行动号召文案（12-20字），邀请他人打开刻迹，融入地点特色或诗意，必须每次不同、不可雷同"'
         )
 
     system_prompt = (
         f'{SYSTEM_PROMPT_BASE}\n\n'
         f'输出格式：严格的JSON，不要包含任何其他文字。\n\n'
         f'{{\n'
-        f'  "title": "时空印记标题（8-16字，有诗意，融合地点名+天气+时间感）",\n'
+        f'  "title": "刻迹标题（8-16字，有诗意，融合地点名+天气+时间感）",\n'
         f'  "subtitle": "副标题（6-12字）",\n'
         f'  "short_description": "一行简短描述（15-30字），包含年代、天气、温度",\n'
         f'  "story": "2-3句话的故事叙述（60-120字），从第一人称视角描述站在此地的感受，融入历史感和天气氛围",\n'

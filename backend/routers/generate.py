@@ -40,9 +40,9 @@ GENERATION_PHASES = [
     {"id": "queued", "label": "锚定时空坐标", "detail": "系统正在锁定GPS、时间戳与气象数据，建立不可篡改的时空锚点。", "progress": 0.08, "tone": "textSecondary", "status": "queued", "duration_ms": 800, "can_cancel": True},
     {"id": "analyze", "label": "识别地点气质", "detail": "AI 正在分析地点类型、地貌特征与人文属性，确定视觉风格。", "progress": 0.24, "tone": "gold", "status": "generating", "duration_ms": 1400, "can_cancel": True},
     {"id": "restore", "label": "生成风格化图像", "detail": "根据地点气质与照片内容，生成陶土/水墨/壁画/赛博风格的藏品图。", "progress": 0.48, "tone": "gold", "status": "generating", "duration_ms": 5000, "can_cancel": True},
-    {"id": "compose", "label": "铸造时空卡面", "detail": "将坐标、天气、计数器与风格化图像融合为一张完整的时空印记卡。", "progress": 0.72, "tone": "success", "status": "generating", "duration_ms": 2000, "can_cancel": False},
+    {"id": "compose", "label": "铸造时空卡面", "detail": "将坐标、天气、计数器与风格化图像融合为一张完整的刻迹卡。", "progress": 0.72, "tone": "success", "status": "generating", "duration_ms": 2000, "can_cancel": False},
     {"id": "seal", "label": "封印金句", "detail": "AI 基于地点与时间生成一行独属于此刻的金句，写入卡面底部。", "progress": 0.92, "tone": "success", "status": "generating", "duration_ms": 2000, "can_cancel": False},
-    {"id": "complete", "label": "印记铸造完成", "detail": "时空印记已存入收藏库，可查看完整卡面并分享。", "progress": 1.0, "tone": "success", "status": "complete", "duration_ms": 500, "can_cancel": False},
+    {"id": "complete", "label": "印记铸造完成", "detail": "刻迹已存入收藏库，可查看完整卡面并分享。", "progress": 1.0, "tone": "success", "status": "complete", "duration_ms": 500, "can_cancel": False},
 ]
 
 
@@ -174,11 +174,11 @@ async def upload_and_create(
         weather_desc = weather["weather_condition"]
         district_or_province = loc.get("district") or loc.get("province") or "此地"
         title = f"{weather_desc}{district_or_province}·第{mint_number}印记"
-    subtitle = ai.get("subtitle") or subtitle_templates.get(location_style, "时空印记")
+    subtitle = ai.get("subtitle") or subtitle_templates.get(location_style, "刻迹")
     short_desc = ai.get("short_description") or f"{loc.get('era_label', '')} · {weather['weather_condition']} · {int(weather['temperature'])}°C"
     story = ai.get("story") or _fallback_story(location_style)
     golden_line = message or ai.get("poem_text") or ai.get("golden_line") or fallback_golden
-    image_alt = ai.get("image_alt") or f"{location_name}时空印记"
+    image_alt = ai.get("image_alt") or f"{location_name}刻迹"
     tags = ai.get("tags") or [t for t in tag_keywords.get(location_style, []) if t]
     mat_keywords = ai.get("material_keywords") or material_keywords_map.get(location_style, [])
 
@@ -342,7 +342,7 @@ async def _run_generation(collectible_id: str, location_style: str, lat: float, 
 def get_generation_status(collectible_id: str):
     item = db.get_collectible_by_id(collectible_id)
     if not item:
-        raise HTTPException(status_code=404, detail="时空印记不存在")
+        raise HTTPException(status_code=404, detail="刻迹不存在")
 
     state = _generation_states.get(collectible_id, {})
     phases = state.get("phases", GENERATION_PHASES)
@@ -373,7 +373,7 @@ def get_generation_status(collectible_id: str):
 async def trigger_generation(collectible_id: str):
     item = db.get_collectible_by_id(collectible_id)
     if not item:
-        raise HTTPException(status_code=404, detail="时空印记不存在")
+        raise HTTPException(status_code=404, detail="刻迹不存在")
 
     location_style = item.get("location_style", "terracotta")
     lat = item.get("latitude", 0)

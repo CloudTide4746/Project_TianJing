@@ -78,7 +78,7 @@ export default function CreateScreen() {
     } catch (err: any) {
       const msg = err?.message || String(err);
       if (msg.includes('Network') || msg.includes('fetch') || msg.includes('Abort')) {
-        setLocationError('无法连接时空印记服务器。请确保手机与后端在同一网络，并检查 MANUAL_BASE_URL 配置。');
+        setLocationError('无法连接刻迹服务器。请确保手机与后端在同一网络，并检查 MANUAL_BASE_URL 配置。');
       } else if (msg.includes('Location') || msg.includes('position')) {
         setLocationError('无法获取GPS定位。请确保已开启定位服务并授权。');
       } else {
@@ -214,7 +214,7 @@ export default function CreateScreen() {
       footer={footer}
       headerDensity="compact"
       subtitle={subtitle}
-      title="铸造时空印记"
+      title="铸造刻迹"
       tone="default"
     >
 
@@ -230,7 +230,7 @@ export default function CreateScreen() {
           autoCapitalize="sentences"
           autoCorrect={false}
           onChangeText={setImprintTitle}
-          placeholder="为这个时空印记起个名字，或留空让 AI 帮你..."
+          placeholder="为这个刻迹起个名字，或留空让 AI 帮你..."
           placeholderTextColor="#8c837a"
           style={styles.titleInput}
           value={imprintTitle}
@@ -354,7 +354,7 @@ export default function CreateScreen() {
           <View style={styles.emptyState}>
             <ThemedText style={styles.emptyTitle}>拍摄后自动锚定</ThemedText>
             <ThemedText themeColor="textSecondary" style={styles.emptyDesc}>
-              系统将通过 GPS 获取你的坐标、当前时间与天气数据，作为这张时空印记的不可篡改锚点。
+              系统将通过 GPS 获取你的坐标、当前时间与天气数据，作为这张刻迹的不可篡改锚点。
             </ThemedText>
             <View style={styles.threeItems}>
               <View style={styles.threeItem}>

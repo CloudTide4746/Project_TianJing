@@ -41,7 +41,7 @@ const successPhases: GenerationPhase[] = [
   {
     id: 'compose',
     label: '铸造时空卡面',
-    detail: '将坐标、天气、计数器与风格化图像融合为一张完整的时空印记卡。',
+    detail: '将坐标、天气、计数器与风格化图像融合为一张完整的刻迹卡。',
     progress: 0.72,
     tone: 'success',
     status: 'generating',
@@ -61,7 +61,7 @@ const successPhases: GenerationPhase[] = [
   {
     id: 'complete',
     label: '印记铸造完成',
-    detail: '时空印记已存入收藏库，可查看完整卡面并分享。',
+    detail: '刻迹已存入收藏库，可查看完整卡面并分享。',
     progress: 1,
     tone: 'success',
     status: 'complete',

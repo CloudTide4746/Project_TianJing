@@ -46,7 +46,7 @@ export function HeroBanner({ item, itemCount, loading, onPressCreate }: HeroBann
   const theme = getCollectibleTheme(kind);
   const { width } = useWindowDimensions();
   const isCompactScreen = width <= 430;
-  const siteName = item?.siteName ?? item?.anchor?.locationName ?? '时空印记';
+  const siteName = item?.siteName ?? item?.anchor?.locationName ?? '刻迹';
   const subtitle = item?.subtitle ?? (loading ? '正在连接时空服务器...' : '拍照即锚定: 坐标、时间、天气自动存档');
 
   return (
