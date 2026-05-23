@@ -2,22 +2,40 @@ import { Image } from 'expo-image';
 import { StyleSheet, View } from 'react-native';
 
 import { Spacing } from '@/constants/theme';
-import type { CollectibleItem } from '@/types/collectible';
-
 import { ThemedText } from '../themed-text';
 import { GlowCard } from '../ui/glow-card';
 import { PrimaryButton } from '../ui/primary-button';
 import { StatusPill } from '../ui/status-pill';
 
+type ListItemData = {
+  id: string;
+  kind?: string;
+  title?: string;
+  subtitle?: string;
+  siteName?: string;
+  eraLabel?: string;
+  thumbnailUrl?: string;
+  generationStatus?: string;
+  isFavorite?: boolean;
+  tags?: string[];
+  updatedAt?: string;
+  createdAt?: string;
+};
+
 type CollectibleListItemProps = {
-  item: CollectibleItem;
+  item: ListItemData;
   onPress: () => void;
 };
 
-function formatDateLabel(value: string) {
+function formatDateLabel(value?: string) {
+  if (!value) return '--';
   const date = new Date(value);
-
+  if (isNaN(date.getTime())) return '--';
   return `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()}`;
+}
+
+function getDisplayTitle(item: ListItemData): string {
+  return item.title || item.siteName || '';
 }
 
 export function CollectibleListItem({ item, onPress }: CollectibleListItemProps) {
@@ -28,11 +46,15 @@ export function CollectibleListItem({ item, onPress }: CollectibleListItemProps)
       padding="sm"
       tone={item.kind}>
       <View style={styles.row}>
-        <Image
-          contentFit="cover"
-          source={{ uri: item.images.thumbnailUrl }}
-          style={styles.thumbnail}
-        />
+        {item.thumbnailUrl ? (
+          <Image
+            contentFit="cover"
+            source={{ uri: item.thumbnailUrl }}
+            style={styles.thumbnail}
+          />
+        ) : (
+          <View style={[styles.thumbnail, styles.thumbnailPlaceholder]} />
+        )}
 
         <View style={styles.content}>
           <View style={styles.topRow}>
@@ -59,7 +81,7 @@ export function CollectibleListItem({ item, onPress }: CollectibleListItemProps)
           </View>
 
           <View style={styles.copy}>
-            <ThemedText style={styles.title}>{item.title}</ThemedText>
+            <ThemedText style={styles.title}>{getDisplayTitle(item)}</ThemedText>
             <ThemedText themeColor="textSecondary" style={styles.subtitle}>
               {item.subtitle}
             </ThemedText>
@@ -70,13 +92,13 @@ export function CollectibleListItem({ item, onPress }: CollectibleListItemProps)
 
           <View style={styles.bottomRow}>
             <View style={styles.tagRow}>
-              {item.tags.slice(0, 2).map((tag) => (
+              {(item.tags ?? []).slice(0, 2).map((tag) => (
                 <StatusPill
                   key={tag}
                   dot={false}
                   label={tag}
                   size="sm"
-                  tone={item.kind}
+                  tone={(item.kind as any) ?? 'ruin'}
                 />
               ))}
             </View>
@@ -85,7 +107,7 @@ export function CollectibleListItem({ item, onPress }: CollectibleListItemProps)
               label="查看详情"
               onPress={onPress}
               size="sm"
-              tone={item.kind}
+              tone={(item.kind as any) ?? 'ruin'}
               variant="ghost"
             />
           </View>
@@ -102,9 +124,12 @@ const styles = StyleSheet.create({
     gap: Spacing.three,
   },
   thumbnail: {
-    width: 96,
-    minHeight: 150,
-    borderRadius: 18,
+    width: 104,
+    minHeight: 156,
+    borderRadius: 20,
+  },
+  thumbnailPlaceholder: {
+    backgroundColor: 'rgba(176, 138, 89, 0.06)',
   },
   content: {
     flex: 1,
@@ -127,8 +152,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    lineHeight: 24,
-    fontWeight: 700,
+    lineHeight: 26,
+    fontWeight: 600,
   },
   subtitle: {
     fontSize: 14,

@@ -10,8 +10,8 @@ import type {
 const successPhases: GenerationPhase[] = [
   {
     id: 'queued',
-    label: '接入时间纹理',
-    detail: '系统正在整理上传影像、地点信息与风格偏好。',
+    label: '锚定时空坐标',
+    detail: '系统正在锁定GPS、时间戳与气象数据，建立不可篡改的时空锚点。',
     progress: 0.08,
     tone: 'textSecondary',
     status: 'queued',
@@ -20,8 +20,8 @@ const successPhases: GenerationPhase[] = [
   },
   {
     id: 'analyze',
-    label: '识别遗址轮廓',
-    detail: 'AI 正在辨认墙线、砖缝、风化层与可追溯的空间比例。',
+    label: '识别地点气质',
+    detail: 'AI 正在分析地点类型、地貌特征与人文属性，确定视觉风格。',
     progress: 0.24,
     tone: 'gold',
     status: 'generating',
@@ -30,8 +30,8 @@ const successPhases: GenerationPhase[] = [
   },
   {
     id: 'restore',
-    label: '推演历史原貌',
-    detail: '根据现存遗构与语义线索补全失落体量，生成第一版可收藏图像。',
+    label: '生成风格化图像',
+    detail: '根据地点气质与照片内容，生成陶土/水墨/壁画/赛博风格的藏品图。',
     progress: 0.48,
     tone: 'gold',
     status: 'generating',
@@ -40,8 +40,8 @@ const successPhases: GenerationPhase[] = [
   },
   {
     id: 'compose',
-    label: '编织记忆叙事',
-    detail: '把地点、材质和时间感压缩成一句适合卡面与分享页的叙事标题。',
+    label: '铸造时空卡面',
+    detail: '将坐标、天气、计数器与风格化图像融合为一张完整的时空印记卡。',
     progress: 0.72,
     tone: 'success',
     status: 'generating',
@@ -50,8 +50,8 @@ const successPhases: GenerationPhase[] = [
   },
   {
     id: 'seal',
-    label: '封印藏品光印',
-    detail: '正在稳定最终色调、金色高光与可分享海报的构图边界。',
+    label: '封印金句',
+    detail: 'AI 基于地点与时间生成一行独属于此刻的金句，写入卡面底部。',
     progress: 0.92,
     tone: 'success',
     status: 'generating',
@@ -60,8 +60,8 @@ const successPhases: GenerationPhase[] = [
   },
   {
     id: 'complete',
-    label: '藏品显影完成',
-    detail: '作品已归档到收藏夹，可直接查看详情页并导出分享海报。',
+    label: '印记铸造完成',
+    detail: '时空印记已存入收藏库，可查看完整卡面并分享。',
     progress: 1,
     tone: 'success',
     status: 'complete',
@@ -74,8 +74,8 @@ const retryableFailurePhases: GenerationPhase[] = [
   ...successPhases.slice(0, 4),
   {
     id: 'failed',
-    label: '封印阶段中断',
-    detail: '已完成主体构图，但纹理封印未稳定，建议保留草稿并重新生成。',
+    label: '铸造中断',
+    detail: '已完成图像生成与卡面排版，但金句封印未稳定，建议保留草稿并重新铸造。',
     progress: 0.84,
     tone: 'error',
     status: 'failed',
@@ -87,11 +87,11 @@ const retryableFailurePhases: GenerationPhase[] = [
 export const mockGenerationScenarios: GenerationScenario[] = [
   {
     id: 'success',
-    title: '标准显影',
+    title: '标准铸造',
     description: '用于生成页自动推进到结果页的顺畅流程。',
     completionStatus: 'complete',
     phases: successPhases,
-    redirectCollectibleId: 'ruin-001',
+    redirectCollectibleId: 'spacetime-001',
   },
   {
     id: 'retryable-failure',
@@ -99,8 +99,8 @@ export const mockGenerationScenarios: GenerationScenario[] = [
     description: '用于失败态展示，保留足够完整的过程文案与重试入口。',
     completionStatus: 'failed',
     phases: retryableFailurePhases,
-    redirectCollectibleId: 'message-002',
-    retryLabel: '重新生成',
+    redirectCollectibleId: 'spacetime-001',
+    retryLabel: '重新铸造',
   },
 ];
 

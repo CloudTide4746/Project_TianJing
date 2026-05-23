@@ -85,18 +85,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   artwork: {
-    width: 88,
-    height: 88,
+    width: 96,
+    height: 96,
     borderRadius: 999,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(212, 168, 83, 0.08)',
+    backgroundColor: 'rgba(176, 138, 89, 0.08)',
   },
   placeholderOrb: {
-    width: 48,
-    height: 48,
+    width: 54,
+    height: 54,
     borderRadius: 999,
-    backgroundColor: 'rgba(212, 168, 83, 0.2)',
+    backgroundColor: 'rgba(176, 138, 89, 0.2)',
   },
   copy: {
     gap: Spacing.two,
@@ -104,8 +104,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    lineHeight: 28,
-    fontWeight: 700,
+    lineHeight: 32,
+    fontWeight: 600,
     textAlign: 'center',
   },
   description: {

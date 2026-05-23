@@ -1,14 +1,14 @@
-import { DarkTheme, Stack, ThemeProvider } from 'expo-router';
+import { DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
 import { Colors } from '@/constants/theme';
 
-const appColors = Colors.dark;
+const appColors = Colors.light;
 
 const productTheme = {
-  ...DarkTheme,
+  ...DefaultTheme,
   colors: {
-    ...DarkTheme.colors,
+    ...DefaultTheme.colors,
     primary: appColors.gold,
     background: appColors.background,
     card: appColors.backgroundElement,
@@ -21,7 +21,7 @@ const productTheme = {
 export default function RootLayout() {
   return (
     <ThemeProvider value={productTheme}>
-      <StatusBar style="light" />
+      <StatusBar style="dark" />
       <Stack
         screenOptions={{
           headerShown: false,

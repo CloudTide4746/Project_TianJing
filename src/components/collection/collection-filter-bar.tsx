@@ -1,33 +1,34 @@
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
-import { collectibleKindOptions } from '@/data/mock-collectibles';
 import { Spacing } from '@/constants/theme';
-import type { CollectibleFilterValue, CollectibleStatus } from '@/types/collectible';
 
 import { ThemedText } from '../themed-text';
 import { GlowCard } from '../ui/glow-card';
 import { StatusPill } from '../ui/status-pill';
 
 type CollectionFilterBarProps = {
-  kind: CollectibleFilterValue;
-  status: CollectibleStatus | 'all';
+  kind: string;
+  status: string;
   resultCount: number;
-  onKindChange: (value: CollectibleFilterValue) => void;
-  onStatusChange: (value: CollectibleStatus | 'all') => void;
+  onKindChange: (value: string) => void;
+  onStatusChange: (value: string) => void;
 };
 
-const statusOptions: readonly { value: CollectibleStatus | 'all'; label: string }[] = [
+const kindOptions: readonly { value: string; label: string; accent: string }[] = [
+  { value: 'all', label: '全部类型', accent: '#b08a59' },
+  { value: 'ruin', label: '废墟重建图', accent: '#9f7a59' },
+  { value: 'message', label: '遗址遗言卡', accent: '#9a5547' },
+  { value: 'crystal', label: '记忆结晶', accent: '#5e8783' },
+];
+
+const statusOptions: readonly { value: string; label: string }[] = [
   { value: 'all', label: '全部状态' },
   { value: 'complete', label: '已完成' },
   { value: 'queued', label: '排队中' },
   { value: 'generating', label: '生成中' },
   { value: 'failed', label: '失败待重试' },
-  { value: 'idle', label: '待开始' },
 ];
 
-function isStatusValue(value: CollectibleStatus | 'all'): value is CollectibleStatus {
-  return value !== 'all';
-}
 
 export function CollectionFilterBar({
   kind,
@@ -42,7 +43,7 @@ export function CollectionFilterBar({
         <View style={styles.copy}>
           <ThemedText style={styles.title}>筛选收藏</ThemedText>
           <ThemedText themeColor="textSecondary" style={styles.subtitle}>
-            组合藏品类型与生成状态，检索任意一次显影记录。
+            组合藏品类型与生成状态，快速找回任意一次显影记录。
           </ThemedText>
         </View>
         <StatusPill
@@ -67,7 +68,7 @@ export function CollectionFilterBar({
               tone={kind === 'all' ? 'gold' : 'default'}
             />
           </Pressable>
-          {collectibleKindOptions.map((option) => (
+          {kindOptions.filter(o => o.value !== 'all').map((option) => (
             <Pressable key={option.value} onPress={() => onKindChange(option.value)}>
               <StatusPill
                 dot={false}
@@ -93,16 +94,10 @@ export function CollectionFilterBar({
             return (
               <Pressable key={option.value} onPress={() => onStatusChange(option.value)}>
                 <StatusPill
-                  dot={selected && isStatusValue(option.value)}
+                  dot={selected && option.value !== 'all'}
                   label={option.label}
-                  status={selected && isStatusValue(option.value) ? option.value : undefined}
-                  tone={
-                    selected
-                      ? isStatusValue(option.value)
-                        ? undefined
-                        : 'gold'
-                      : 'default'
-                  }
+                  status={selected && option.value !== 'all' ? (option.value as any) : undefined}
+                  tone={selected ? (option.value !== 'all' ? undefined : 'gold') : 'default'}
                 />
               </Pressable>
             );
@@ -130,7 +125,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     lineHeight: 24,
-    fontWeight: 700,
+    fontWeight: 600,
   },
   subtitle: {
     fontSize: 14,

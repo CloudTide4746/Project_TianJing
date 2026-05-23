@@ -1,83 +1,190 @@
 import { Image } from 'expo-image';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
+import {
+  FoundationColors,
+  getCollectibleTheme,
+  type CollectibleThemeId,
+} from '@/constants/collectible-theme';
 import { Spacing } from '@/constants/theme';
-import type { CollectibleItem } from '@/types/collectible';
-
 import { ThemedText } from '../themed-text';
-import { GlowCard } from '../ui/glow-card';
 import { SectionHeader } from '../ui/section-header';
 import { StatusPill } from '../ui/status-pill';
 
-type RecentCollectibleStripProps = {
-  items: readonly CollectibleItem[];
-  onPressItem: (item: CollectibleItem) => void;
-  onPressMore?: () => void;
+type StripItem = {
+  id: string;
+  title: string;
+  siteName?: string;
+  eraLabel?: string;
+  thumbnailUrl?: string;
+  generationStatus?: string;
+  kind?: string;
+  locationStyle?: string;
 };
 
-function formatCompactDate(value: string) {
-  const date = new Date(value);
+type RecentCollectibleStripProps = {
+  items: readonly StripItem[];
+  onPressItem: (item: StripItem) => void;
+  onPressMore?: () => void;
+  tone?: CollectibleThemeId;
+  loading?: boolean;
+  error?: string | null;
+};
 
-  return `${date.getMonth() + 1}.${date.getDate()}`;
+const ITEM_GAP = 14;
+const LEAD_CARD_WIDTH = 216;
+const CARD_WIDTH = 192;
+const IMAGE_HEIGHT = 176;
+
+function withAlpha(hex: string, alpha: number) {
+  const normalized = hex.replace('#', '');
+  const r = Number.parseInt(normalized.slice(0, 2), 16);
+  const g = Number.parseInt(normalized.slice(2, 4), 16);
+  const b = Number.parseInt(normalized.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
 export function RecentCollectibleStrip({
   items,
   onPressItem,
   onPressMore,
+  tone = 'ruin',
+  loading,
+  error,
 }: RecentCollectibleStripProps) {
+  const theme = getCollectibleTheme(tone);
+  const hasItems = items.length > 0;
+
   return (
     <View style={styles.container}>
       <SectionHeader
         actionLabel={onPressMore ? '查看全部' : undefined}
         onAction={onPressMore}
-        subtitle="最近完成或仍在显影中的作品，保留移动端快速扫览的节奏。"
-        title="最近作品"
+        subtitle="最近铸造的时空印记，按时间顺序展开。"
+        title="近期印记"
+        tone={tone}
       />
 
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        horizontal
-        showsHorizontalScrollIndicator={false}>
-        {items.map((item) => (
-          <GlowCard
-            interactive
-            key={item.id}
-            onPress={() => onPressItem(item)}
-            padding="none"
-            style={styles.card}
-            tone={item.kind}>
-            <Image
-              contentFit="cover"
-              source={{ uri: item.images.thumbnailUrl }}
-              style={styles.image}
-            />
-            <View style={styles.cardCopy}>
-              <View style={styles.metaRow}>
-                <StatusPill
-                  size="sm"
-                  status={item.generationStatus}
+      {loading ? (
+        <View style={styles.emptyWrap}>
+          <ThemedText style={styles.emptyText} themeColor="textMuted">
+            正在加载时空印记...
+          </ThemedText>
+        </View>
+      ) : error ? (
+        <View style={styles.emptyWrap}>
+          <ThemedText style={styles.emptyText} themeColor="textMuted">
+            无法连接时空印记服务器
+          </ThemedText>
+        </View>
+      ) : hasItems ? (
+        <View>
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            decelerationRate="fast"
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          >
+            {items.map((item, index) => {
+              const isLead = index === 0;
+              const cardWidth = isLead ? LEAD_CARD_WIDTH : CARD_WIDTH;
+              const isComplete = item.generationStatus === 'complete';
+              const isInProgress =
+                !isComplete &&
+                item.generationStatus !== 'failed' &&
+                item.generationStatus !== 'idle';
+
+              return (
+                <Pressable
+                  key={item.id}
+                  onPress={() => onPressItem(item)}
+                  style={({ pressed }) => [
+                    styles.card,
+                    {
+                      width: cardWidth,
+                      backgroundColor: FoundationColors.backgroundBright,
+                      borderColor: withAlpha(theme.primary, 0.16),
+                      shadowColor: theme.primary,
+                    },
+                    pressed && styles.cardPressed,
+                  ]}
+                >
+                  <View style={[styles.imageFrame, { height: IMAGE_HEIGHT }]}>
+                    {item.thumbnailUrl ? (
+                      <Image
+                        contentFit="cover"
+                        source={{ uri: item.thumbnailUrl }}
+                        style={styles.image}
+                        transition={300}
+                      />
+                    ) : (
+                      <View style={[styles.image, styles.imagePlaceholder]} />
+                    )}
+
+                    <View style={styles.statusOverlay}>
+                      <StatusPill
+                        dot={!isComplete}
+                        size="sm"
+                        status={item.generationStatus}
+                      />
+                    </View>
+
+                    {isInProgress && (
+                      <View style={styles.progressTrack}>
+                        <View
+                          style={[
+                            styles.progressFill,
+                            { backgroundColor: theme.accent },
+                          ]}
+                        />
+                      </View>
+                    )}
+                  </View>
+
+                  <View style={styles.cardBody}>
+                    <ThemedText numberOfLines={1} style={styles.title}>
+                      {item.title}
+                    </ThemedText>
+                    <ThemedText
+                      numberOfLines={1}
+                      style={styles.meta}
+                      themeColor="textSecondary"
+                    >
+                      {item.siteName} · {item.eraLabel}
+                    </ThemedText>
+                  </View>
+                </Pressable>
+              );
+            })}
+          </ScrollView>
+
+          {items.length > 1 && (
+            <View style={styles.progressDots}>
+              {items.map((item, i) => (
+                <View
+                  key={item.id}
+                  style={[
+                    styles.dot,
+                    {
+                      backgroundColor:
+                        i === 0
+                          ? theme.accent
+                          : withAlpha(theme.accent, 0.28),
+                      width: i === 0 ? 18 : 6,
+                    },
+                  ]}
                 />
-                <StatusPill
-                  dot={false}
-                  label={formatCompactDate(item.updatedAt)}
-                  size="sm"
-                  tone="default"
-                />
-              </View>
-              <View style={styles.textBlock}>
-                <ThemedText style={styles.title}>{item.title}</ThemedText>
-                <ThemedText themeColor="textSecondary" style={styles.subtitle}>
-                  {item.shortDescription}
-                </ThemedText>
-              </View>
-              <ThemedText themeColor="textMuted" style={styles.caption}>
-                {item.siteName}
-              </ThemedText>
+              ))}
             </View>
-          </GlowCard>
-        ))}
-      </ScrollView>
+          )}
+        </View>
+      ) : (
+        <View style={styles.emptyWrap}>
+          <ThemedText style={styles.emptyText} themeColor="textMuted">
+            暂无近期作品，开始你的第一次创作吧
+          </ThemedText>
+        </View>
+      )}
     </View>
   );
 }
@@ -87,39 +194,85 @@ const styles = StyleSheet.create({
     gap: Spacing.three,
   },
   scrollContent: {
-    gap: Spacing.three,
-    paddingRight: Spacing.three,
+    gap: ITEM_GAP,
+    paddingHorizontal: Spacing.three,
+    paddingBottom: 24,
   },
+  // Card
   card: {
-    width: 248,
+    borderRadius: 22,
+    overflow: 'hidden',
+    borderWidth: 1,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.07,
+    shadowRadius: 18,
+    elevation: 3,
+  },
+  cardPressed: {
+    opacity: 0.9,
+    transform: [{ scale: 0.975 }],
+  },
+  // Image
+  imageFrame: {
+    width: '100%',
+    overflow: 'hidden',
   },
   image: {
     width: '100%',
-    height: 180,
+    height: '100%',
   },
-  cardCopy: {
-    padding: Spacing.three,
-    gap: Spacing.two,
+  imagePlaceholder: {
+    backgroundColor: 'rgba(176, 138, 89, 0.06)',
   },
-  metaRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: Spacing.two,
+  statusOverlay: {
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
   },
-  textBlock: {
-    gap: Spacing.two,
+  progressTrack: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 3,
+    backgroundColor: 'rgba(0,0,0,0.06)',
+  },
+  progressFill: {
+    height: '100%',
+    width: '60%',
+    borderRadius: 999,
+  },
+  // Card body
+  cardBody: {
+    padding: 13,
+    gap: 3,
   },
   title: {
-    fontSize: 18,
-    lineHeight: 24,
-    fontWeight: 700,
+    fontSize: 17,
+    lineHeight: 22,
+    fontWeight: 600,
+    color: FoundationColors.text,
   },
-  subtitle: {
-    fontSize: 14,
-    lineHeight: 20,
-  },
-  caption: {
+  meta: {
     fontSize: 13,
     lineHeight: 18,
+  },
+  // Progress dots
+  progressDots: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 6,
+  },
+  dot: {
+    height: 6,
+    borderRadius: 999,
+  },
+  // Empty
+  emptyWrap: {
+    paddingVertical: Spacing.five,
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: 14,
   },
 });

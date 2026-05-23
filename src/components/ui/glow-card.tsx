@@ -44,6 +44,7 @@ function getTonePalette(tone: GlowCardTone) {
       border: FoundationColors.gold,
       glow: FoundationColors.gold,
       accent: FoundationColors.gold,
+      surface: FoundationColors.backgroundBright,
     };
   }
 
@@ -52,6 +53,7 @@ function getTonePalette(tone: GlowCardTone) {
       border: FoundationColors.success,
       glow: FoundationColors.success,
       accent: FoundationColors.success,
+      surface: FoundationColors.backgroundBright,
     };
   }
 
@@ -60,6 +62,7 @@ function getTonePalette(tone: GlowCardTone) {
       border: FoundationColors.error,
       glow: FoundationColors.error,
       accent: FoundationColors.error,
+      surface: FoundationColors.backgroundBright,
     };
   }
 
@@ -68,14 +71,24 @@ function getTonePalette(tone: GlowCardTone) {
       border: FoundationColors.border,
       glow: FoundationColors.gold,
       accent: FoundationColors.textSecondary,
+      surface: FoundationColors.backgroundElement,
     };
   }
 
   const theme = getCollectibleTheme(tone);
+  if (!theme) {
+    return {
+      border: FoundationColors.border,
+      glow: FoundationColors.gold,
+      accent: FoundationColors.textSecondary,
+      surface: FoundationColors.backgroundElement,
+    };
+  }
   return {
     border: theme.secondary,
     glow: theme.primary,
     accent: theme.accent,
+    surface: theme.surface,
   };
 }
 
@@ -106,7 +119,6 @@ export function GlowCard({
 }: GlowCardProps) {
   const palette = getTonePalette(tone);
   const isInteractive = Boolean(onPress || onLongPress || interactive);
-
   const cardBody = (
     <View
       style={[
@@ -114,6 +126,7 @@ export function GlowCard({
         {
           borderColor: withAlpha(palette.border, 0.68),
           shadowColor: palette.glow,
+          backgroundColor: palette.surface,
           opacity: disabled ? 0.64 : 1,
         },
         style,
@@ -130,9 +143,27 @@ export function GlowCard({
       <View
         pointerEvents="none"
         style={[
+          styles.highlight,
+          {
+            backgroundColor: withAlpha(palette.accent, 0.18),
+          },
+        ]}
+      />
+      <View
+        pointerEvents="none"
+        style={[
           styles.accentBar,
           {
             backgroundColor: withAlpha(palette.accent, 0.7),
+          },
+        ]}
+      />
+      <View
+        pointerEvents="none"
+        style={[
+          styles.cornerWash,
+          {
+            borderColor: withAlpha(palette.border, 0.26),
           },
         ]}
       />
@@ -151,6 +182,7 @@ export function GlowCard({
       onLongPress={onLongPress}
       onPress={onPress}
       style={({ pressed }) => [
+        styles.pressable,
         pressed && !disabled && styles.pressed,
       ]}>
       {cardBody}
@@ -161,23 +193,31 @@ export function GlowCard({
 const styles = StyleSheet.create({
   card: {
     overflow: 'hidden',
-    borderRadius: 28,
+    borderRadius: 30,
     borderWidth: 1,
     backgroundColor: FoundationColors.backgroundElement,
     shadowOffset: {
       width: 0,
       height: 12,
     },
-    shadowOpacity: 0.18,
-    shadowRadius: 28,
-    elevation: 8,
+    shadowOpacity: 0.08,
+    shadowRadius: 24,
+    elevation: 4,
   },
   glow: {
     position: 'absolute',
-    top: -36,
-    right: -12,
-    width: 120,
-    height: 120,
+    top: -52,
+    right: -22,
+    width: 160,
+    height: 160,
+    borderRadius: 999,
+  },
+  highlight: {
+    position: 'absolute',
+    top: 1,
+    left: Spacing.three,
+    right: Spacing.three,
+    height: 56,
     borderRadius: 999,
   },
   accentBar: {
@@ -185,9 +225,18 @@ const styles = StyleSheet.create({
     left: Spacing.three,
     right: Spacing.three,
     top: 0,
-    height: 1.5,
+    height: 2,
     borderBottomLeftRadius: 999,
     borderBottomRightRadius: 999,
+  },
+  cornerWash: {
+    position: 'absolute',
+    right: -26,
+    bottom: -26,
+    width: 140,
+    height: 140,
+    borderWidth: 1,
+    borderRadius: 999,
   },
   paddingNone: {
     padding: 0,
@@ -197,14 +246,17 @@ const styles = StyleSheet.create({
     gap: Spacing.three,
   },
   paddingMedium: {
-    padding: Spacing.four,
+    padding: 22,
     gap: Spacing.three,
   },
   paddingLarge: {
-    padding: Spacing.five,
+    padding: 30,
     gap: Spacing.four,
   },
+  pressable: {
+    borderRadius: 30,
+  },
   pressed: {
-    transform: [{ scale: 0.988 }],
+    transform: [{ scale: 0.985 }, { translateY: 2 }],
   },
 });

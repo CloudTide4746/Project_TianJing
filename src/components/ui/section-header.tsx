@@ -16,6 +16,7 @@ type SectionHeaderProps = {
   subtitle?: string;
   tone?: CollectibleThemeId | 'default';
   align?: 'left' | 'center';
+  density?: 'default' | 'compact';
   actionLabel?: string;
   onAction?: () => void;
   trailing?: ReactNode;
@@ -32,6 +33,7 @@ export function SectionHeader({
   subtitle,
   tone = 'default',
   align = 'left',
+  density = 'default',
   actionLabel,
   onAction,
   trailing,
@@ -39,29 +41,41 @@ export function SectionHeader({
 }: SectionHeaderProps) {
   const accentColor = getAccentColor(tone);
   const isCentered = align === 'center';
+  const isCompact = density === 'compact';
 
   return (
     <View
       style={[
         styles.container,
         isCentered && styles.containerCentered,
+        isCompact && styles.containerCompact,
         style,
       ]}>
-      <View style={styles.copy}>
+      <View style={[styles.copy, isCompact && styles.copyCompact]}>
         {eyebrow ? (
-          <ThemedText
-            style={[
-              styles.eyebrow,
-              isCentered && styles.textCentered,
-              { color: accentColor },
-            ]}>
-            {eyebrow}
-          </ThemedText>
+          <View style={[styles.eyebrowWrap, isCentered && styles.eyebrowWrapCentered]}>
+            <View
+              style={[
+                styles.eyebrowDot,
+                { backgroundColor: accentColor },
+              ]}
+            />
+            <ThemedText
+              style={[
+                styles.eyebrow,
+                isCompact && styles.eyebrowCompact,
+                isCentered && styles.textCentered,
+                { color: accentColor },
+              ]}>
+              {eyebrow}
+            </ThemedText>
+          </View>
         ) : null}
         <ThemedText
           type="subtitle"
           style={[
             styles.title,
+            isCompact && styles.titleCompact,
             isCentered && styles.textCentered,
           ]}>
           {title}
@@ -71,6 +85,7 @@ export function SectionHeader({
             themeColor="textSecondary"
             style={[
               styles.subtitle,
+              isCompact && styles.subtitleCompact,
               isCentered && styles.textCentered,
             ]}>
             {subtitle}
@@ -113,24 +128,59 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  containerCompact: {
+    gap: Spacing.two,
+  },
   copy: {
     flex: 1,
-    gap: Spacing.two,
+    gap: 10,
+  },
+  copyCompact: {
+    gap: 6,
+  },
+  eyebrowWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  eyebrowWrapCentered: {
+    justifyContent: 'center',
+  },
+  eyebrowDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 999,
   },
   eyebrow: {
     fontSize: 12,
     lineHeight: 16,
     fontWeight: 700,
-    letterSpacing: 1.4,
+    letterSpacing: 1.8,
     textTransform: 'uppercase',
   },
+  eyebrowCompact: {
+    fontSize: 11,
+    lineHeight: 14,
+    letterSpacing: 1.2,
+  },
   title: {
-    fontSize: 28,
-    lineHeight: 34,
+    fontSize: 30,
+    lineHeight: 40,
+    fontWeight: 600,
+  },
+  titleCompact: {
+    fontSize: 24,
+    lineHeight: 32,
   },
   subtitle: {
+    maxWidth: 560,
     fontSize: 15,
-    lineHeight: 22,
+    lineHeight: 24,
+  },
+  subtitleCompact: {
+    maxWidth: 520,
+    fontSize: 14,
+    lineHeight: 20,
   },
   textCentered: {
     textAlign: 'center',

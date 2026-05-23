@@ -74,13 +74,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.one,
   },
   title: {
-    fontSize: 17,
-    lineHeight: 22,
-    fontWeight: 700,
+    fontSize: 18,
+    lineHeight: 24,
+    fontWeight: 600,
   },
   description: {
     fontSize: 13,
-    lineHeight: 18,
+    lineHeight: 20,
   },
   actions: {
     gap: Spacing.two,

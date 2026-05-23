@@ -1,4 +1,4 @@
-import type { CollectibleThemeId } from '@/constants/collectible-theme';
+import type { CollectibleThemeId, LocationStyleId } from '@/constants/collectible-theme';
 
 export type CollectibleKind = CollectibleThemeId;
 
@@ -42,10 +42,27 @@ export interface CollectibleMetrics {
   saveCount: number;
 }
 
+export interface SpacetimeAnchor {
+  latitude: number;
+  longitude: number;
+  timestamp: string;
+  weatherCondition: string;
+  temperature: number;
+  windDirection: string;
+  windLevel: number;
+  aqi: number;
+  aqiLevel: string;
+  locationName: string;
+  mintNumber: number;
+  earliestImprint: string;
+  goldenLine: string;
+}
+
 export interface CollectibleItem {
   id: string;
   slug: string;
   kind: CollectibleKind;
+  locationStyle: LocationStyleId;
   title: string;
   subtitle: string;
   shortDescription: string;
@@ -66,6 +83,7 @@ export interface CollectibleItem {
   relatedIds: string[];
   metrics: CollectibleMetrics;
   share: CollectibleShareContent;
+  anchor: SpacetimeAnchor;
 }
 
 export interface GenerationPhase {

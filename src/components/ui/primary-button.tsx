@@ -33,6 +33,7 @@ type PrimaryButtonProps = Omit<PressableProps, 'style'> & {
   size?: PrimaryButtonSize;
   fullWidth?: boolean;
   loading?: boolean;
+  loadingLabel?: string;
   leading?: ReactNode;
   trailing?: ReactNode;
   style?: StyleProp<ViewStyle>;
@@ -43,41 +44,47 @@ function getVariantColors(
   tone: CollectibleThemeId | 'default',
   disabled: boolean,
 ) {
-  const accent = tone === 'default' ? FoundationColors.gold : getCollectibleTheme(tone).primary;
+  const theme = tone === 'default' ? null : getCollectibleTheme(tone);
+  const accent = tone === 'default' ? FoundationColors.gold : (theme?.primary ?? FoundationColors.gold);
 
   if (disabled) {
     return {
       backgroundColor: FoundationColors.backgroundSelected,
       borderColor: FoundationColors.border,
       textColor: FoundationColors.textMuted,
+      highlight: FoundationColors.backgroundBright,
     };
   }
 
   switch (variant) {
     case 'secondary':
       return {
-        backgroundColor: FoundationColors.backgroundElement,
+        backgroundColor: FoundationColors.backgroundBright,
         borderColor: accent,
         textColor: FoundationColors.text,
+        highlight: FoundationColors.background,
       };
     case 'ghost':
       return {
         backgroundColor: 'transparent',
         borderColor: FoundationColors.border,
         textColor: FoundationColors.textSecondary,
+        highlight: FoundationColors.backgroundBright,
       };
     case 'destructive':
       return {
         backgroundColor: FoundationColors.error,
         borderColor: FoundationColors.error,
-        textColor: FoundationColors.text,
+        textColor: FoundationColors.backgroundBright,
+        highlight: FoundationColors.error,
       };
     case 'primary':
     default:
       return {
         backgroundColor: accent,
         borderColor: accent,
-        textColor: FoundationColors.background,
+        textColor: FoundationColors.backgroundBright,
+        highlight: FoundationColors.backgroundBright,
       };
   }
 }
@@ -101,6 +108,7 @@ export function PrimaryButton({
   size = 'md',
   fullWidth = true,
   loading = false,
+  loadingLabel = '处理中...',
   disabled = false,
   leading,
   trailing,
@@ -120,6 +128,7 @@ export function PrimaryButton({
       onPressOut={onPressOut}
       style={({ pressed }) => [
         !fullWidth && styles.inlineButton,
+        styles.pressable,
         pressed && !isDisabled && styles.pressed,
       ]}
       {...pressableProps}>
@@ -135,6 +144,16 @@ export function PrimaryButton({
           },
           style,
         ]}>
+        <View
+          pointerEvents="none"
+          style={[
+            styles.highlight,
+            {
+              backgroundColor: variant === 'ghost' ? 'transparent' : colors.highlight,
+              opacity: variant === 'ghost' ? 0 : 0.22,
+            },
+          ]}
+        />
         <View style={styles.inner}>
           {loading ? (
             <ActivityIndicator
@@ -152,7 +171,7 @@ export function PrimaryButton({
                 color: colors.textColor,
               },
             ]}>
-            {loading ? '处理中...' : label}
+            {loading ? loadingLabel : label}
           </ThemedText>
           {loading ? <View style={styles.placeholder} /> : (trailing ?? <View style={styles.placeholder} />)}
         </View>
@@ -163,30 +182,34 @@ export function PrimaryButton({
 
 const styles = StyleSheet.create({
   button: {
-    minHeight: 52,
-    borderRadius: 18,
+    minHeight: 54,
+    borderRadius: 20,
     borderWidth: 1,
+    overflow: 'hidden',
     justifyContent: 'center',
     paddingHorizontal: Spacing.four,
   },
   medium: {
-    minHeight: 52,
+    minHeight: 54,
   },
   small: {
     minHeight: 42,
-    borderRadius: 14,
+    borderRadius: 16,
     paddingHorizontal: Spacing.three,
   },
   large: {
-    minHeight: 58,
-    borderRadius: 20,
+    minHeight: 60,
+    borderRadius: 22,
     paddingHorizontal: Spacing.five,
   },
   inlineButton: {
     alignSelf: 'flex-start',
   },
+  pressable: {
+    borderRadius: 20,
+  },
   pressed: {
-    transform: [{ scale: 0.985 }],
+    transform: [{ scale: 0.982 }, { translateY: 1 }],
   },
   inner: {
     minHeight: 22,
@@ -197,10 +220,11 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: Fonts.sans,
-    fontSize: 16,
+    fontSize: 15,
     lineHeight: 22,
     fontWeight: 700,
     textAlign: 'center',
+    letterSpacing: 0.2,
   },
   labelSmall: {
     fontSize: 14,
@@ -209,5 +233,13 @@ const styles = StyleSheet.create({
   placeholder: {
     width: 14,
     height: 14,
+  },
+  highlight: {
+    position: 'absolute',
+    top: 1,
+    left: 1,
+    right: 1,
+    height: '50%',
+    borderRadius: 18,
   },
 });

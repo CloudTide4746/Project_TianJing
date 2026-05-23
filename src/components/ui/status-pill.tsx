@@ -5,7 +5,7 @@ import {
   getCollectibleTheme,
   type CollectibleThemeId,
 } from '@/constants/collectible-theme';
-import { Fonts, Spacing } from '@/constants/theme';
+import { Fonts } from '@/constants/theme';
 import type { CollectibleStatus } from '@/types/collectible';
 
 import { ThemedText } from '../themed-text';
@@ -70,8 +70,8 @@ function getToneColors(resolvedTone: StatusPillTone) {
   if (resolvedTone === 'gold') {
     return {
       borderColor: withAlpha(FoundationColors.gold, 0.5),
-      backgroundColor: withAlpha(FoundationColors.gold, 0.12),
-      textColor: FoundationColors.gold,
+      backgroundColor: withAlpha(FoundationColors.gold, 0.1),
+      textColor: '#7f6540',
       dotColor: FoundationColors.gold,
     };
   }
@@ -79,7 +79,7 @@ function getToneColors(resolvedTone: StatusPillTone) {
   if (resolvedTone === 'success') {
     return {
       borderColor: withAlpha(FoundationColors.success, 0.45),
-      backgroundColor: withAlpha(FoundationColors.success, 0.12),
+      backgroundColor: withAlpha(FoundationColors.success, 0.1),
       textColor: FoundationColors.success,
       dotColor: FoundationColors.success,
     };
@@ -88,7 +88,7 @@ function getToneColors(resolvedTone: StatusPillTone) {
   if (resolvedTone === 'error') {
     return {
       borderColor: withAlpha(FoundationColors.error, 0.45),
-      backgroundColor: withAlpha(FoundationColors.error, 0.12),
+      backgroundColor: withAlpha(FoundationColors.error, 0.1),
       textColor: FoundationColors.error,
       dotColor: FoundationColors.error,
     };
@@ -97,7 +97,7 @@ function getToneColors(resolvedTone: StatusPillTone) {
   if (resolvedTone === 'muted') {
     return {
       borderColor: withAlpha(FoundationColors.border, 0.92),
-      backgroundColor: withAlpha(FoundationColors.backgroundSelected, 0.78),
+      backgroundColor: withAlpha(FoundationColors.backgroundSelected, 0.82),
       textColor: FoundationColors.textMuted,
       dotColor: FoundationColors.textMuted,
     };
@@ -106,17 +106,25 @@ function getToneColors(resolvedTone: StatusPillTone) {
   if (resolvedTone === 'default') {
     return {
       borderColor: withAlpha(FoundationColors.border, 0.92),
-      backgroundColor: withAlpha(FoundationColors.backgroundSelected, 0.62),
+      backgroundColor: withAlpha(FoundationColors.backgroundBright, 0.84),
       textColor: FoundationColors.textSecondary,
       dotColor: FoundationColors.gold,
     };
   }
 
   const theme = getCollectibleTheme(resolvedTone);
+  if (!theme) {
+    return {
+      borderColor: withAlpha(FoundationColors.border, 0.92),
+      backgroundColor: withAlpha(FoundationColors.backgroundSelected, 0.82),
+      textColor: FoundationColors.textMuted,
+      dotColor: FoundationColors.textMuted,
+    };
+  }
   return {
     borderColor: withAlpha(theme.primary, 0.45),
-    backgroundColor: withAlpha(theme.primary, 0.12),
-    textColor: theme.accent,
+      backgroundColor: withAlpha(theme.primary, 0.1),
+      textColor: theme.secondary,
     dotColor: theme.primary,
   };
 }
@@ -175,29 +183,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 999,
     borderWidth: 1,
-    gap: Spacing.two,
+    gap: 7,
   },
   medium: {
-    minHeight: 32,
+    minHeight: 30,
     paddingHorizontal: 12,
-    paddingVertical: 7,
+    paddingVertical: 6,
   },
   small: {
-    minHeight: 26,
+    minHeight: 24,
     paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingVertical: 4,
   },
   dot: {
-    width: 7,
-    height: 7,
+    width: 6,
+    height: 6,
     borderRadius: 999,
   },
   label: {
-    fontFamily: Fonts.mono,
+    fontFamily: Fonts.sans,
     fontSize: 12,
     lineHeight: 16,
-    fontWeight: 700,
-    letterSpacing: 0.5,
+    fontWeight: 600,
+    letterSpacing: 0.2,
   },
   labelSmall: {
     fontSize: 11,

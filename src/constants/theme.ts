@@ -13,6 +13,8 @@ const productThemeColors = {
   text: FoundationColors.text,
   background: FoundationColors.background,
   backgroundElement: FoundationColors.backgroundElement,
+  backgroundLight: FoundationColors.backgroundLight,
+  backgroundBright: FoundationColors.backgroundBright,
   backgroundSelected: FoundationColors.backgroundSelected,
   textSecondary: FoundationColors.textSecondary,
   textMuted: FoundationColors.textMuted,

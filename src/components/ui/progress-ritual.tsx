@@ -41,6 +41,24 @@ function getToneFromPhase(phase: GenerationPhase): GlowCardTone {
   }
 }
 
+function getPhaseSummary(phase: GenerationPhase) {
+  switch (phase.status) {
+    case 'complete':
+      return '显影完成，正在整理结果页与分享摘要。';
+    case 'failed':
+      return '封印阶段出现波动，草稿已保留，可随时重新显影。';
+    case 'queued':
+      return '素材已入列，系统正在为这次显影腾出稳定算力。';
+    case 'generating':
+      return phase.canCancel
+        ? '仍可返回创作页调整素材与文案。'
+        : '最终叙事已经锁定，建议等待自动完成。';
+    case 'idle':
+    default:
+      return '等待流程开始。';
+  }
+}
+
 export function ProgressRitual({
   currentPhase,
   phases,
@@ -55,6 +73,7 @@ export function ProgressRitual({
   const toneFromPhase = tone ?? getToneFromPhase(currentPhase);
   const barWidth = useSharedValue(0);
   const pulse = useSharedValue(0.55);
+  const summaryText = getPhaseSummary(currentPhase);
 
   useEffect(() => {
     barWidth.value = withTiming(trackWidth * normalizedProgress, {
@@ -84,10 +103,17 @@ export function ProgressRitual({
   }));
 
   const pulseStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(pulse.value, [0.55, 1], [0.38, 0.92]),
+    opacity: interpolate(pulse.value, [0.55, 1], [0.32, 0.72]),
     transform: [
       {
         scale: interpolate(pulse.value, [0.55, 1], [0.96, 1.14]),
+      },
+      {
+        translateX: interpolate(
+          pulse.value,
+          [0.55, 1],
+          [0, Math.max(barWidth.value - 84, 0)],
+        ),
       },
     ],
   }));
@@ -169,6 +195,15 @@ export function ProgressRitual({
           );
         })}
       </View>
+
+      <View style={styles.summaryRow}>
+        <StatusPill
+          dot={currentPhase.status === 'generating'}
+          label={summaryText}
+          size="sm"
+          tone={toneFromPhase === 'default' ? undefined : toneFromPhase}
+        />
+      </View>
     </GlowCard>
   );
 }
@@ -186,8 +221,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    lineHeight: 28,
-    fontWeight: 700,
+    lineHeight: 30,
+    fontWeight: 600,
   },
   subtitle: {
     fontSize: 14,
@@ -197,16 +232,16 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     height: 12,
     borderRadius: 999,
-    backgroundColor: 'rgba(61, 50, 43, 0.86)',
+    backgroundColor: 'rgba(216, 206, 192, 0.72)',
     justifyContent: 'center',
   },
   pulse: {
     position: 'absolute',
     left: 0,
-    width: 100,
-    height: 100,
+    width: 84,
+    height: 84,
     borderRadius: 999,
-    backgroundColor: 'rgba(212, 168, 83, 0.16)',
+    backgroundColor: 'rgba(176, 138, 89, 0.16)',
   },
   fill: {
     height: '100%',
@@ -221,6 +256,9 @@ const styles = StyleSheet.create({
   },
   phaseList: {
     gap: Spacing.three,
+  },
+  summaryRow: {
+    alignItems: 'flex-start',
   },
   phaseRow: {
     flexDirection: 'row',
@@ -250,7 +288,7 @@ const styles = StyleSheet.create({
   phaseLabel: {
     fontSize: 15,
     lineHeight: 20,
-    fontWeight: 700,
+    fontWeight: 600,
   },
   phaseDetail: {
     fontSize: 13,

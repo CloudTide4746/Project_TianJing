@@ -24,6 +24,7 @@ type ScreenShellProps = {
   subtitle?: string;
   eyebrow?: string;
   tone?: CollectibleThemeId | 'default';
+  headerDensity?: 'default' | 'compact';
   headerSlot?: ReactNode;
   footer?: ReactNode;
   scrollable?: boolean;
@@ -51,6 +52,7 @@ export function ScreenShell({
   subtitle,
   eyebrow,
   tone = 'default',
+  headerDensity = 'default',
   headerSlot,
   footer,
   scrollable = true,
@@ -59,10 +61,17 @@ export function ScreenShell({
   scrollProps,
 }: ScreenShellProps) {
   const accentColor = getAccentColor(tone);
+  const isCompactHeader = headerDensity === 'compact';
   const content = (
-    <View style={[styles.content, contentContainerStyle]}>
+    <View
+      style={[
+        styles.content,
+        isCompactHeader && styles.contentCompact,
+        contentContainerStyle,
+      ]}>
       {title || subtitle || eyebrow ? (
         <SectionHeader
+          density={headerDensity}
           eyebrow={eyebrow}
           subtitle={subtitle}
           title={title ?? ''}
@@ -82,26 +91,24 @@ export function ScreenShell({
         <View
           pointerEvents="none"
           style={[
-            styles.glowTop,
-            {
-              backgroundColor: withAlpha(accentColor, 0.16),
-            },
+            styles.inkWash,
+            { backgroundColor: withAlpha(accentColor, 0.1) },
           ]}
         />
         <View
           pointerEvents="none"
-          style={[
-            styles.glowBottom,
-            {
-              backgroundColor: withAlpha(FoundationColors.gold, 0.08),
-            },
-          ]}
+          style={styles.paperGlow}
+        />
+        <View
+          pointerEvents="none"
+          style={styles.frame}
         />
         {scrollable ? (
           <ScrollView
             bounces={false}
             contentContainerStyle={[
               styles.scrollContent,
+              isCompactHeader && styles.scrollContentCompact,
               footer ? styles.scrollContentWithFooter : null,
             ]}
             keyboardShouldPersistTaps="handled"
@@ -110,7 +117,9 @@ export function ScreenShell({
             {content}
           </ScrollView>
         ) : (
-          <View style={styles.staticContent}>{content}</View>
+          <View style={[styles.staticContent, isCompactHeader && styles.staticContentCompact]}>
+            {content}
+          </View>
         )}
 
         {footer ? (
@@ -134,48 +143,68 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: FoundationColors.background,
   },
-  glowTop: {
+  inkWash: {
     position: 'absolute',
-    top: -40,
-    right: -24,
-    width: 180,
-    height: 180,
+    top: -64,
+    right: -40,
+    width: 240,
+    height: 240,
     borderRadius: 999,
   },
-  glowBottom: {
+  paperGlow: {
     position: 'absolute',
-    bottom: -96,
-    left: -28,
+    left: -72,
+    bottom: 80,
     width: 220,
     height: 220,
     borderRadius: 999,
+    backgroundColor: withAlpha(FoundationColors.backgroundBright, 0.72),
+  },
+  frame: {
+    position: 'absolute',
+    top: 14,
+    left: 14,
+    right: 14,
+    bottom: 14,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: withAlpha(FoundationColors.border, 0.62),
+    borderRadius: 28,
   },
   scrollContent: {
     paddingHorizontal: Spacing.three,
-    paddingTop: Spacing.three,
+    paddingTop: Spacing.four,
     paddingBottom: Spacing.five,
   },
+  scrollContentCompact: {
+    paddingTop: 14,
+  },
   scrollContentWithFooter: {
-    paddingBottom: 136,
+    paddingBottom: 150,
   },
   staticContent: {
     flex: 1,
     paddingHorizontal: Spacing.three,
-    paddingTop: Spacing.three,
+    paddingTop: Spacing.four,
     paddingBottom: Spacing.five,
+  },
+  staticContentCompact: {
+    paddingTop: 14,
   },
   content: {
     width: '100%',
     maxWidth: MaxContentWidth,
     alignSelf: 'center',
-    gap: Spacing.four,
+    gap: 28,
+  },
+  contentCompact: {
+    gap: 18,
   },
   footerSafeArea: {
     position: 'absolute',
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: withAlpha(FoundationColors.background, 0.98),
+    backgroundColor: withAlpha(FoundationColors.backgroundBright, 0.94),
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: withAlpha(FoundationColors.border, 0.8),
   },

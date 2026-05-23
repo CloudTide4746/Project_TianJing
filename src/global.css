@@ -1,45 +1,45 @@
 :root {
-  --font-display: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', serif;
+  --font-display: 'Source Han Serif SC', 'Noto Serif SC', 'Songti SC', serif;
   --font-sans:
     'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
   --font-accent: 'LXGW WenKai', 'STKaiti', 'KaiTi', serif;
   --font-serif: var(--font-display);
   --font-rounded: var(--font-accent);
   --font-mono:
-    'Outfit', 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    'IBM Plex Mono', 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  --color-bg-deep: #1a1714;
-  --color-bg-card: #2d2520;
-  --color-bg-border: #3d322b;
-  --color-bg-light: #e8dfd2;
-  --color-bg-bright: #f5f0e8;
+  --color-bg-deep: #ece4d6;
+  --color-bg-card: #fbf8f2;
+  --color-bg-border: #d8cec0;
+  --color-bg-light: #f1ebe0;
+  --color-bg-bright: #fffdf8;
 
-  --color-text-primary: #f0e8d8;
-  --color-text-secondary: #a89880;
-  --color-text-muted: #6b5d4f;
+  --color-text-primary: #1b1714;
+  --color-text-secondary: #5f564e;
+  --color-text-muted: #8c837a;
 
-  --color-ruin-primary: #c4956a;
-  --color-ruin-secondary: #8b7355;
-  --color-ruin-highlight: #f2c87a;
-  --color-ruin-cold: #4a4a52;
+  --color-ruin-primary: #9f7a59;
+  --color-ruin-secondary: #6d5b4d;
+  --color-ruin-highlight: #c8a06f;
+  --color-ruin-cold: #efe5d6;
 
-  --color-ink-primary: #c75040;
-  --color-ink-secondary: #2c2c2c;
-  --color-ink-highlight: #e8c8a0;
-  --color-ink-accent: #6b8c5a;
+  --color-ink-primary: #9a5547;
+  --color-ink-secondary: #76554d;
+  --color-ink-highlight: #d39a7d;
+  --color-ink-accent: #f1e3dc;
 
-  --color-crystal-primary: #4a9b8a;
-  --color-crystal-secondary: #2d6b5a;
-  --color-crystal-highlight: #d4a853;
-  --color-crystal-blue: #4a7ab0;
-  --color-crystal-orange: #c87040;
+  --color-crystal-primary: #5e8783;
+  --color-crystal-secondary: #4d696a;
+  --color-crystal-highlight: #8fb6af;
+  --color-crystal-blue: #dcebe5;
+  --color-crystal-orange: #b08a59;
 
-  --color-success: #6b8c5a;
-  --color-error: #c75040;
-  --color-gold: #d4a853;
+  --color-success: #5d7760;
+  --color-error: #9a5547;
+  --color-gold: #b08a59;
 
-  --gradient-ruin: linear-gradient(135deg, #4a4a52 0%, #8b7355 50%, #c4956a 100%);
-  --gradient-ink: linear-gradient(180deg, #2c2c2c 0%, #e8c8a0 60%, #f5f0e8 100%);
-  --gradient-crystal: linear-gradient(135deg, #2d6b5a 0%, #4a9b8a 40%, #d4a853 100%);
-  --gradient-base: radial-gradient(ellipse at bottom, #2d2520 0%, #1a1714 100%);
+  --gradient-ruin: linear-gradient(135deg, #f6efe5 0%, #e6d7c4 56%, #caa77b 100%);
+  --gradient-ink: linear-gradient(180deg, #f7efea 0%, #ead6cb 58%, #c88f75 100%);
+  --gradient-crystal: linear-gradient(135deg, #f2f7f5 0%, #dcebe5 48%, #9dbdb7 100%);
+  --gradient-base: radial-gradient(circle at top left, #fffdf8 0%, #f6f2e9 58%, #ece4d6 100%);
 }
