@@ -163,8 +163,17 @@ async def upload_and_create(
         aqi_level=aqi_data["aqi_level"], province=loc["province"],
     )
 
-    # ── Merge: AI first, user imprintTitle overrides, template fallback ──
-    title = imprintTitle.strip() or ai.get("title") or location_name
+    # ── Merge: AI first, user imprintTitle overrides, NEVER use lat/lng as title ──
+    # Determine the best title for the collectible
+    if imprintTitle.strip():
+        title = imprintTitle.strip()
+    elif ai.get("title"):
+        title = ai.get("title")
+    else:
+        # AI failed to generate a title, build one from context — never use raw lat/lng
+        weather_desc = weather["weather_condition"]
+        district_or_province = loc.get("district") or loc.get("province") or "此地"
+        title = f"{weather_desc}{district_or_province}·第{mint_number}印记"
     subtitle = ai.get("subtitle") or subtitle_templates.get(location_style, "时空印记")
     short_desc = ai.get("short_description") or f"{loc.get('era_label', '')} · {weather['weather_condition']} · {int(weather['temperature'])}°C"
     story = ai.get("story") or _fallback_story(location_style)
@@ -172,6 +181,14 @@ async def upload_and_create(
     image_alt = ai.get("image_alt") or f"{location_name}时空印记"
     tags = ai.get("tags") or [t for t in tag_keywords.get(location_style, []) if t]
     mat_keywords = ai.get("material_keywords") or material_keywords_map.get(location_style, [])
+
+    # Share call_to_action: when aiPoetry on → use poem as bottom text; else AI-generated CTA
+    if ai_poetry_enabled and ai.get("poem_text"):
+        call_to_action_val = ai["poem_text"]
+    elif ai.get("call_to_action"):
+        call_to_action_val = ai["call_to_action"]
+    else:
+        call_to_action_val = f"打开时空卡，见证你在{location_name}的坐标被存档。"
 
     now_iso = datetime.now(timezone.utc).isoformat()
     timestamp_display = datetime.now(timezone.utc).strftime("%Y.%m.%d %H:%M")
@@ -215,6 +232,7 @@ async def upload_and_create(
         "mint_number": mint_number,
         "earliest_imprint": earliest,
         "golden_line": golden_line,
+        "call_to_action": call_to_action_val,
     }
     db.insert_collectible(collectible_data)
 

@@ -11,6 +11,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
+from starlette.formparsers import MultiPartParser
+
+# Increase multipart part size limit: 1MB → 10MB (for base64 photos)
+MultiPartParser.max_part_size = 10 * 1024 * 1024  # 10MB
+
 from database import init_db
 from routers import collectibles, location, generate, qrcode
 

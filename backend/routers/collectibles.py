@@ -59,7 +59,7 @@ def _to_collectible_out(data: dict) -> CollectibleOut:
         share=CollectibleShareContentOut(
             title=f"我在{data.get('location_name', '')}留下了第{data.get('mint_number', 0)}个时空印记",
             caption=data.get("golden_line", ""),
-            call_to_action="打开时空卡，见证你的坐标被存档。",
+            call_to_action=data.get("call_to_action") or f"打开时空卡，见证你在{data.get('location_name', '')}的坐标被存档。",
             hashtags=[f"#时空印记", f"#{data.get('site_name', '')}"],
         ),
         anchor=SpacetimeAnchorOut(

@@ -13,6 +13,7 @@
 import { Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as FileSystem from 'expo-file-system/legacy';
+import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 
 // ═══ SET YOUR COMPUTER'S LAN IP HERE ═══
 const MANUAL_BASE_URL = 'http://10.200.186.154:8000';
@@ -263,9 +264,16 @@ export async function uploadCollectible(
 ): Promise<UploadResponse> {
   const filename = imageUri.split('/').pop() ?? 'photo.jpg';
 
-  // Read image file as base64 — fetch() can't resolve local file:// URIs in RN.
-  // expo-file-system handles all URI schemes (file://, content://, ph://).
-  const base64Data = await FileSystem.readAsStringAsync(imageUri, {
+  // Compress image to avoid exceeding upload size limits (max ~1MB)
+  const compressed = await manipulateAsync(
+    imageUri,
+    [{ resize: { width: 1920 } }],
+    { compress: 0.8, format: SaveFormat.JPEG },
+  );
+  const compressedUri = compressed.uri;
+
+  // Read compressed image as base64
+  const base64Data = await FileSystem.readAsStringAsync(compressedUri, {
     encoding: FileSystem.EncodingType.Base64,
   });
 

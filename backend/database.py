@@ -60,11 +60,18 @@ def init_db() -> None:
             mint_number INTEGER NOT NULL DEFAULT 0,
             earliest_imprint TEXT NOT NULL DEFAULT '',
             golden_line TEXT NOT NULL DEFAULT '',
+            call_to_action TEXT NOT NULL DEFAULT '',
             view_count INTEGER NOT NULL DEFAULT 0,
             share_count INTEGER NOT NULL DEFAULT 0,
             save_count INTEGER NOT NULL DEFAULT 0
         )
     """)
+    # Migration: add call_to_action column for existing databases
+    try:
+        conn.execute("ALTER TABLE collectibles ADD COLUMN call_to_action TEXT NOT NULL DEFAULT ''")
+    except sqlite3.OperationalError:
+        pass  # column already exists
+
     conn.execute("""
         CREATE TABLE IF NOT EXISTS location_counters (
             location_hash TEXT PRIMARY KEY,
@@ -134,6 +141,7 @@ def insert_collectible(data: dict) -> dict:
     data.setdefault("mint_number", 0)
     data.setdefault("earliest_imprint", "")
     data.setdefault("golden_line", "")
+    data.setdefault("call_to_action", "")
 
     for k in ("tags", "material_keywords", "related_ids"):
         if isinstance(data.get(k), list):
@@ -149,7 +157,7 @@ def insert_collectible(data: dict) -> dict:
         "is_favorite", "is_featured", "generation_status", "related_ids",
         "latitude", "longitude", "timestamp", "weather_condition", "temperature",
         "wind_direction", "wind_level", "aqi", "aqi_level", "location_name",
-        "mint_number", "earliest_imprint", "golden_line",
+        "mint_number", "earliest_imprint", "golden_line", "call_to_action",
         "view_count", "share_count", "save_count",
     ]
     placeholders = ", ".join(f":{c}" for c in columns)

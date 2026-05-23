@@ -45,6 +45,7 @@ def _parse_ai_response(text: str) -> dict:
         "story": str(data.get("story", "")),
         "golden_line": str(data.get("golden_line", "")),
         "poem_text": str(data.get("poem_text", "")),
+        "call_to_action": str(data.get("call_to_action", "")),
         "tags": data.get("tags", []) if isinstance(data.get("tags"), list) else [],
         "material_keywords": data.get("material_keywords", []) if isinstance(data.get("material_keywords"), list) else [],
         "image_alt": str(data.get("image_alt", "")),
@@ -82,10 +83,16 @@ async def enrich_spacetime_imprint(
             '融入地点名、天气、时间感，符合中国传统诗词格律",\n'
             '  "poem_text": "古诗全文（纯文本，每句之间用逗号或句号分隔，方便渲染到画面上）"'
         )
+        call_to_action_instruction = (
+            '"call_to_action": "将上面生成的古诗原文（poem_text）完整复制到这里，作为分享时的底部文案"'
+        )
     else:
         golden_line_instruction = (
             '"golden_line": "一句金句（15-30字），像诗一样，关于时间、地点、存在的感悟",\n'
             '  "poem_text": ""'
+        )
+        call_to_action_instruction = (
+            '"call_to_action": "分享行动号召文案（12-20字），邀请他人打开时空印记，融入地点特色或诗意，必须每次不同、不可雷同"'
         )
 
     system_prompt = (
@@ -97,6 +104,7 @@ async def enrich_spacetime_imprint(
         f'  "short_description": "一行简短描述（15-30字），包含年代、天气、温度",\n'
         f'  "story": "2-3句话的故事叙述（60-120字），从第一人称视角描述站在此地的感受，融入历史感和天气氛围",\n'
         f'  {golden_line_instruction},\n'
+        f'  {call_to_action_instruction},\n'
         f'  "tags": ["标签1", "标签2", "标签3"],\n'
         f'  "material_keywords": ["材质1", "材质2", "材质3"],\n'
         f'  "image_alt": "图片alt描述文本（10-20字）"\n'
