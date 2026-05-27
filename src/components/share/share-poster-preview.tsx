@@ -61,11 +61,6 @@ export function SharePosterPreview({
               {shareContent.caption}
             </ThemedText>
           ) : null}
-          {anchor.goldenLine ? (
-            <ThemedText style={[styles.goldenLine, { color: theme.secondary }]}>
-              "{anchor.goldenLine}"
-            </ThemedText>
-          ) : null}
           {shareContent?.callToAction ? (
             <ThemedText style={[styles.cta, { color: theme.primary }]}>
               {shareContent.callToAction}
